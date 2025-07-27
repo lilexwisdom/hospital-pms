@@ -397,7 +397,7 @@
               1
             ],
             "details": "1. app/patients/[id]/page.tsx 라우트 생성\n2. 탭 네비게이션 컴포넌트 구현 (URL 쿼리 파라미터 연동)\n3. PatientOverview 컴포넌트 (기본 정보, 상태, 담당자)\n4. ConsultationHistory 컴포넌트 (상담 이력 타임라인)\n5. AppointmentInfo 컴포넌트 (예약 캘린더 뷰)\n6. 탭 전환 시 데이터 프리페칭 구현",
-            "status": "pending",
+            "status": "in-progress",
             "testStrategy": ""
           },
           {
@@ -716,7 +716,7 @@
     ],
     "metadata": {
       "created": "2025-07-17T12:11:52.460Z",
-      "updated": "2025-07-27T13:19:54.251Z",
+      "updated": "2025-07-27T13:31:51.431Z",
       "description": "Tasks for master context"
     }
   }

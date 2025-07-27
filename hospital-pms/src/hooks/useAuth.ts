@@ -254,7 +254,10 @@ export function useAuth(): UseAuthReturn {
             setSession(session);
             setUser(user);
             await loadProfile(user.id);
-            router.push(AUTH_REDIRECTS.SIGN_IN_SUCCESS);
+            // Only redirect if we're on the login page
+            if (window.location.pathname === '/login') {
+              router.push(AUTH_REDIRECTS.SIGN_IN_SUCCESS);
+            }
           }
           break;
         case 'SIGNED_OUT':
