@@ -11,15 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Plus, Download, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-interface PatientsPageProps {
-  // 페이지 props 타입 정의
-}
-
-function PatientsPage(props: PatientsPageProps) {
+function PatientsPage() {
   const [filters, setFilters] = useState<IPatientFilters>({});
   const router = useRouter();
-  
-  console.log('PatientsPage rendering...');
   
   const {
     table,
@@ -30,21 +24,17 @@ function PatientsPage(props: PatientsPageProps) {
     currentPage,
     totalPages,
   } = usePatientTable({ filters });
-  
-  console.log('Table data:', { isLoading, error, totalCount });
 
   const handleCreatePatient = () => {
-    router.push('/patients/new' as any);
+    router.push('/patients/new');
   };
 
   const handleExport = () => {
     // TODO: Implement export functionality
-    console.log('Export patients');
   };
 
   const handleImport = () => {
     // TODO: Implement import functionality
-    console.log('Import patients');
   };
 
   if (error) {
