@@ -29,6 +29,14 @@ export function ProtectedRoute({
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
+    console.log('ProtectedRoute:', { 
+      loading, 
+      isAuthenticated, 
+      requiredRole,
+      currentProfile: profile,
+      isAuthorized 
+    });
+    
     // Skip checks while loading
     if (loading) {
       return;
@@ -36,6 +44,7 @@ export function ProtectedRoute({
 
     // Check authentication after loading completes
     if (!isAuthenticated) {
+      console.log('Not authenticated, redirecting to /login');
       router.push('/login');
       return;
     }
@@ -46,15 +55,23 @@ export function ProtectedRoute({
         ? hasAnyRole(requiredRole)
         : hasRole(requiredRole);
 
+      console.log('Role check:', { 
+        requiredRole, 
+        hasRequiredRole,
+        userRole: profile?.role 
+      });
+
       if (!hasRequiredRole) {
+        console.log('No required role, redirecting to:', fallbackUrl);
         router.push(fallbackUrl);
         return;
       }
     }
 
     // All checks passed
+    console.log('Authorization passed');
     setIsAuthorized(true);
-  }, [loading, isAuthenticated, requiredRole, hasRole, hasAnyRole, router, fallbackUrl]);
+  }, [loading, isAuthenticated, requiredRole, hasRole, hasAnyRole, router, fallbackUrl, profile]);
 
   // 로딩 중일 때
   if (loading) {

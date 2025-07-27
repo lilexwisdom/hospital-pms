@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { logSSNAccess } from './ssn-encryption';
 
 // Roles that can decrypt SSN
@@ -24,7 +24,7 @@ export async function checkSSNDecryptPermission(
   request: NextRequest
 ): Promise<SSNAccessContext | null> {
   try {
-    const supabase = await createServerClient();
+    const supabase = await createClient();
     
     // Get current user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -50,7 +50,7 @@ export async function checkSSNDecryptPermission(
       userRole,
       canDecrypt: DECRYPT_ALLOWED_ROLES.includes(userRole),
       canViewMasked: VIEW_ALLOWED_ROLES.includes(userRole),
-      ipAddress: request.headers.get('x-forwarded-for') || request.ip,
+      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
       userAgent: request.headers.get('user-agent') || undefined
     };
   } catch (error) {

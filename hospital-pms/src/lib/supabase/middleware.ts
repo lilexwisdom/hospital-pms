@@ -163,14 +163,17 @@ export async function updateSession(request: NextRequest) {
       await supabase.from('audit_logs').insert({
         user_id: user.id,
         action: 'unauthorized_access_attempt',
-        table_name: 'middleware',
-        new_data: {
+        resource_type: 'middleware',
+        resource_id: path,
+        changes: {
           path,
           userRole: profile?.role,
           requiredRoles: protectedRoute.roles,
         },
-      }).catch(err => {
-        log('error', 'Failed to log audit entry', { error: err.message });
+      }).then(({ error }) => {
+        if (error) {
+          log('error', 'Failed to log audit entry', { error: error.message });
+        }
       });
       
       // Redirect to unauthorized page

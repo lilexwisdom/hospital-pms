@@ -27,11 +27,6 @@
       "args": ["-y", "@context7/mcp-server"],
       "disabled": false
     },
-    "ide": {
-      "command": "node",
-      "args": ["node_modules/@vscode/prompt-tsx/dist/mcp-server.js"],
-      "env": {}
-    },
     "supabase": {
       "command": "npx",
       "args": [

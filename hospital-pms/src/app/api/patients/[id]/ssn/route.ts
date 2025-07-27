@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { ssnDecryptionMiddleware, checkRateLimit } from '@/lib/security/ssn-middleware';
 import { logSSNAccess, decryptSSN } from '@/lib/security/ssn-encryption';
 
@@ -36,7 +36,7 @@ export async function GET(
         );
       }
       
-      const supabase = await createServerClient();
+      const supabase = await createClient();
       
       // Call the database function to get decrypted SSN
       const { data, error } = await supabase

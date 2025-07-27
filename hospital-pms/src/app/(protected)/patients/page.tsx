@@ -1,57 +1,105 @@
 'use client';
 
+import { useState } from 'react';
 import { withProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PageLoadingSkeleton } from '@/components/auth/AuthLoading';
+import { usePatientTable } from '@/hooks/usePatientTable';
+import { PatientFilters } from '@/components/patients/PatientFilters';
+import { PatientTable } from '@/components/patients/PatientTable';
+import { PatientFilters as IPatientFilters } from '@/types/patient.types';
+import { Button } from '@/components/ui/button';
+import { Plus, Download, Upload } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface PatientsPageProps {
   // 페이지 props 타입 정의
 }
 
 function PatientsPage(props: PatientsPageProps) {
-  return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">환자 관리</h1>
-      <p className="text-muted-foreground mb-8">
-        환자 정보를 검색하고 관리할 수 있습니다. (CS, Manager, Admin 접근 가능)
-      </p>
-      
-      <div className="space-y-4">
-        {/* 환자 검색 UI */}
-        <div className="flex gap-4">
-          <input 
-            type="text" 
-            placeholder="환자 이름 또는 ID로 검색..." 
-            className="flex-1 px-4 py-2 border rounded-lg"
-          />
-          <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg">
-            검색
-          </button>
-        </div>
-        
-        {/* 환자 목록 테이블 */}
-        <div className="border rounded-lg p-4">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-2">ID</th>
-                <th className="text-left p-2">이름</th>
-                <th className="text-left p-2">연락처</th>
-                <th className="text-left p-2">담당 CS</th>
-                <th className="text-left p-2">마지막 방문</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b">
-                <td className="p-2">P001</td>
-                <td className="p-2">홍길동</td>
-                <td className="p-2">010-1234-5678</td>
-                <td className="p-2">김CS</td>
-                <td className="p-2">2024-01-15</td>
-              </tr>
-            </tbody>
-          </table>
+  const [filters, setFilters] = useState<IPatientFilters>({});
+  const router = useRouter();
+  
+  console.log('PatientsPage rendering...');
+  
+  const {
+    table,
+    isLoading,
+    error,
+    refetch,
+    totalCount,
+    currentPage,
+    totalPages,
+  } = usePatientTable({ filters });
+  
+  console.log('Table data:', { isLoading, error, totalCount });
+
+  const handleCreatePatient = () => {
+    router.push('/patients/new' as any);
+  };
+
+  const handleExport = () => {
+    // TODO: Implement export functionality
+    console.log('Export patients');
+  };
+
+  const handleImport = () => {
+    // TODO: Implement import functionality
+    console.log('Import patients');
+  };
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-800">
+          <h3 className="font-semibold mb-2">오류가 발생했습니다</h3>
+          <p>{error.message}</p>
+          <Button onClick={() => refetch()} className="mt-4" variant="outline">
+            다시 시도
+          </Button>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold">환자 관리</h1>
+            <p className="text-muted-foreground mt-2">
+              환자 정보를 검색하고 관리할 수 있습니다.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={handleImport}>
+              <Upload className="mr-2 h-4 w-4" />
+              가져오기
+            </Button>
+            <Button variant="outline" onClick={handleExport}>
+              <Download className="mr-2 h-4 w-4" />
+              내보내기
+            </Button>
+            <Button onClick={handleCreatePatient}>
+              <Plus className="mr-2 h-4 w-4" />
+              새 환자 등록
+            </Button>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <PatientFilters filters={filters} onFiltersChange={setFilters} />
+      </div>
+
+      {/* Table */}
+      <PatientTable
+        table={table}
+        isLoading={isLoading}
+        totalCount={totalCount}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </div>
   );
 }

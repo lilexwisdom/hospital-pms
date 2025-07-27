@@ -242,7 +242,7 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     const subscription = onAuthStateChange(async (event, session) => {
       // Skip INITIAL_SESSION as we handle it in the initialization effect
-      if (event === 'INITIAL_SESSION') {
+      if (event === 'INITIAL_SESSION' as any) {
         return;
       }
       
@@ -261,7 +261,7 @@ export function useAuth(): UseAuthReturn {
           setSession(null);
           setUser(null);
           setProfile(null);
-          router.push(AUTH_REDIRECTS.SIGN_OUT);
+          router.push(AUTH_REDIRECTS.SIGN_OUT as any);
           break;
         case 'TOKEN_REFRESHED':
           // Verify user on token refresh
@@ -272,7 +272,7 @@ export function useAuth(): UseAuthReturn {
             await loadProfile(refreshedUser.id);
           }
           break;
-        case 'PASSWORD_RECOVERY':
+        case 'PASSWORD_RECOVERY' as any:
         case 'USER_UPDATED':
           // Re-verify user for these events
           const { data: { user: updatedUser } } = await supabase.auth.getUser();

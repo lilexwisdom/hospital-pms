@@ -74,7 +74,7 @@ export async function signIn(
     if (authError) {
       console.error('Auth error:', authError);
       // 에러 메시지를 한국어로 변환
-      const errorMessage = AUTH_ERROR_MESSAGES[authError.message] || AUTH_ERROR_MESSAGES.UNKNOWN_ERROR;
+      const errorMessage = AUTH_ERROR_MESSAGES[authError.message as keyof typeof AUTH_ERROR_MESSAGES] || AUTH_ERROR_MESSAGES.UNKNOWN_ERROR;
       return actionError(errorMessage, AuthErrorCode.INVALID_CREDENTIALS);
     }
 
@@ -97,8 +97,9 @@ export async function signIn(
     await supabase.from('audit_logs').insert({
       user_id: authData.user.id,
       action: 'sign_in',
-      table_name: 'auth',
-      new_data: {
+      resource_type: 'auth',
+      resource_id: authData.user.id,
+      changes: {
         email: authData.user.email,
         role: profile.role,
         signInAt: new Date().toISOString(),

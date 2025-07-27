@@ -386,7 +386,7 @@
             "description": "TanStack Table을 활용한 환자 목록 테이블 구현, 서버 사이드 페이지네이션, 다중 필터링(상태/담당자/기간), 빠른 검색 기능 구현",
             "dependencies": [],
             "details": "1. TanStack Table v8 설정 및 커스텀 훅 구현\n2. Supabase 페이지네이션 쿼리 작성 (LIMIT/OFFSET)\n3. 필터 컴포넌트 구현 (상태 드롭다운, 담당자 선택, 날짜 범위)\n4. 디바운싱된 검색 입력 필드 구현\n5. 정렬 기능 및 컬럼 가시성 토글 구현\n6. 로딩 상태 및 스켈레톤 UI 추가",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -716,7 +716,7 @@
     ],
     "metadata": {
       "created": "2025-07-17T12:11:52.460Z",
-      "updated": "2025-07-24T13:25:43.227Z",
+      "updated": "2025-07-27T13:19:54.251Z",
       "description": "Tasks for master context"
     }
   }
