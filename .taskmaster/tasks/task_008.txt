@@ -1,0 +1,51 @@
+# Task ID: 8
+# Title: 실시간 대시보드 및 통계 시스템 구현
+# Status: pending
+# Dependencies: 7
+# Priority: medium
+# Description: Supabase Realtime 기반 실시간 대시보드, 역할별 위젯, KPI 통계 및 차트 시각화
+# Details:
+1. Supabase Realtime 구독 설정:
+   ```typescript
+   useEffect(() => {
+     const channel = supabase
+       .channel('dashboard')
+       .on('postgres_changes', {
+         event: '*',
+         schema: 'public',
+         table: 'patients'
+       }, handleRealtimeUpdate)
+       .subscribe();
+   }, []);
+   ```
+2. 역할별 대시보드 위젯:
+   - BD: 최근 설문 응답, 개인 실적
+   - CS: 인계 환자, 예약 현황
+   - Manager: 전사 KPI, 팀별 성과
+3. 통계 집계 쿼리:
+   ```sql
+   CREATE OR REPLACE FUNCTION get_dashboard_stats()
+   RETURNS TABLE (
+     total_patients INTEGER,
+     today_surveys INTEGER,
+     conversion_rate NUMERIC,
+     pending_appointments INTEGER
+   ) AS $$
+   -- 복잡한 집계 쿼리
+   $$ LANGUAGE sql;
+   ```
+4. 차트 구현 (Recharts):
+   - 일별 환자 유입 추이
+   - 상담사별 전환율
+   - 검사 종류별 분포
+5. 실시간 알림 토스트:
+   - 새 설문 응답
+   - 예약 변경/취소
+   - 긴급 사항
+
+# Test Strategy:
+1. Realtime 연결 안정성 테스트
+2. 동시 다중 사용자 업데이트 테스트
+3. 통계 집계 정확성 검증
+4. 차트 렌더링 성능 테스트
+5. 위젯 자동 갱신 테스트

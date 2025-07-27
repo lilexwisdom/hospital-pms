@@ -1,0 +1,73 @@
+# Task ID: 7
+# Title: 예약 관리 시스템 및 캘린더 뷰 구현
+# Status: pending
+# Dependencies: 6
+# Priority: high
+# Description: 예약 CRUD, 시간 충돌 검사, 캘린더/리스트 뷰, 예약 변경 이력 추적 및 리마인더 기능
+# Details:
+1. 예약 생성 모달:
+   - 환자 선택 (검색 자동완성)
+   - 검사 항목 선택
+   - 날짜/시간 선택 (영업시간만 표시)
+   - 예약 가능 여부 실시간 확인
+2. 시간 충돌 검사:
+   ```typescript
+   async function checkAvailability(datetime: Date, duration: number) {
+     const { data: conflicts } = await supabase
+       .from('appointments')
+       .select('*')
+       .gte('start_time', datetime)
+       .lt('start_time', addMinutes(datetime, duration));
+     return conflicts.length === 0;
+   }
+   ```
+3. 캘린더 뷰 구현 (FullCalendar 또는 자체 구현):
+   - 월/주/일 뷰 전환
+   - 드래그 앤 드롭 일정 변경
+   - 검사 종류별 색상 구분
+4. 예약 변경/취소:
+   - 변경 사유 필수 입력
+   - 이력 자동 기록
+   - 환자 알림 발송
+5. 리마인더 시스템:
+   - 예약 1일 전 자동 알림
+   - No-show 방지 확인 전화 기록
+
+# Test Strategy:
+1. 동시 예약 충돌 방지 테스트
+2. 캘린더 성능 테스트 (100+ 예약)
+3. 예약 변경 트랜잭션 테스트
+4. 시간대 변환 정확성 테스트
+5. 리마인더 발송 스케줄러 테스트
+
+# Subtasks:
+## 1. 예약 생성 모달 구현 및 시간 충돌 검사 로직 개발 [pending]
+### Dependencies: None
+### Description: 환자 선택, 검사 항목 선택, 날짜/시간 선택 기능이 포함된 예약 생성 모달을 구현하고, 실시간 시간 충돌 검사 로직을 개발합니다.
+### Details:
+React Hook Form과 Zod를 사용한 폼 유효성 검사, Supabase RPC 함수로 시간 충돌 검사 구현, 환자 검색 자동완성 (debounce 적용), 영업시간만 선택 가능하도록 제한, 검사 항목별 소요 시간 자동 계산
+
+## 2. 캘린더 뷰 구현 (월/주/일 뷰, 드래그앤드롭) [pending]
+### Dependencies: 7.1
+### Description: FullCalendar 라이브러리를 활용하여 월별, 주별, 일별 뷰를 구현하고 예약 드래그앤드롭 기능을 추가합니다.
+### Details:
+FullCalendar React 컴포넌트 통합, 예약 상태별 색상 구분 (대기/확정/완료/취소), 드래그앤드롭 시 시간 충돌 실시간 검증, 터치 디바이스 지원, 예약 상세 정보 툴팁/팝오버 표시
+
+## 3. 예약 변경/취소 기능 및 이력 관리 시스템 [pending]
+### Dependencies: 7.2
+### Description: 예약 수정, 취소 기능을 구현하고 모든 변경 사항에 대한 감사 이력을 추적하는 시스템을 개발합니다.
+### Details:
+예약 변경 모달 (시간, 검사 항목 수정), 취소 사유 입력 필수화, appointment_history 테이블에 변경 이력 저장, 변경 사항 타임라인 뷰 구현, 변경 권한 체크 (본인 예약만 수정 가능)
+
+## 4. 리마인더 알림 시스템 및 No-show 방지 기능 [pending]
+### Dependencies: 7.3
+### Description: 예약 리마인더 자동 발송 시스템을 구축하고 No-show를 방지하기 위한 기능을 구현합니다.
+### Details:
+Supabase Edge Functions로 리마인더 스케줄러 구현, 예약 24시간/3시간 전 알림 발송, 카카오톡 알림톡 API 연동, No-show 이력 추적 및 경고 시스템, 예약 확인 응답 처리 로직
+
+## 5. 예약 통계 대시보드 및 리포트 생성 기능 [pending]
+### Dependencies: 7.4
+### Description: 예약 관련 통계를 시각화하고 Excel/PDF 형식의 리포트를 생성하는 기능을 개발합니다.
+### Details:
+일별/주별/월별 예약 현황 차트 (Chart.js), 검사 항목별 예약 통계, No-show 율 분석, 시간대별 예약 분포도, Excel/PDF 리포트 자동 생성 (예약 목록, 통계 요약)
+

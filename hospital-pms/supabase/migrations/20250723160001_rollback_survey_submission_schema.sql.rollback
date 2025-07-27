@@ -1,0 +1,25 @@
+-- Rollback migration for 20250723160000_fix_survey_submission_schema.sql
+-- This file is for documentation purposes - rename to .sql and run if rollback is needed
+
+-- Drop the fixed function
+DROP FUNCTION IF EXISTS submit_survey_with_patient(text, jsonb, text, jsonb, jsonb);
+
+-- Recreate the previous version (from 20250723150001)
+CREATE FUNCTION submit_survey_with_patient(
+  p_token TEXT,
+  p_patient_data JSONB,
+  p_ssn TEXT,
+  p_survey_responses JSONB,
+  p_medical_data JSONB DEFAULT NULL
+) RETURNS JSONB AS $$
+-- Previous function body would go here
+-- This is just for documentation - get the actual body from the previous migration
+$$ LANGUAGE plpgsql;
+
+-- Remove added columns (BE CAREFUL - this will lose data)
+-- ALTER TABLE patients DROP COLUMN IF EXISTS address_detail;
+-- ALTER TABLE patients DROP COLUMN IF EXISTS status;
+-- ALTER TABLE patients DROP COLUMN IF EXISTS assigned_bd_id;
+
+-- Drop index
+-- DROP INDEX IF EXISTS idx_patients_assigned_bd_id;

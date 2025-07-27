@@ -1,0 +1,93 @@
+{
+	"meta": {
+		"generatedAt": "2025-07-17T12:28:42.959Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 10,
+		"analysisCount": 10,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 1,
+			"taskTitle": "NextJS 14 프로젝트 초기 설정 및 개발 환경 구성",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "NextJS 14 프로젝트 초기 설정을 다음 단계로 나누어 구현: 1) create-next-app으로 프로젝트 생성 및 TypeScript 설정, 2) 환경 변수 구성 및 디렉토리 구조 설정, 3) 필수 의존성 패키지 설치 (Supabase, React Query, Tailwind 확장), 4) 개발 도구 설정 (ESLint, Prettier, Husky), 5) 개발/빌드/배포 테스트",
+			"reasoning": "프로젝트 초기 설정은 여러 구성 요소를 포함하지만 대부분 표준화된 작업입니다. 의존성 설치, 환경 설정, 개발 도구 구성 등 독립적인 작업들로 나눌 수 있어 5개의 서브태스크가 적절합니다."
+		},
+		{
+			"taskId": 2,
+			"taskTitle": "Supabase 프로젝트 생성 및 데이터베이스 스키마 구축",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "Supabase 데이터베이스 구축을 단계별로 구현: 1) Supabase 프로젝트 생성 및 환경별 설정, 2) 사용자/역할 관련 테이블 생성 (profiles, user_role enum), 3) 환자 관련 테이블 생성 (patients, medical_records, 암호화 설정), 4) 설문/예약 관련 테이블 생성 (survey_tokens, appointments), 5) RLS 정책 구현 및 역할별 권한 설정, 6) 인덱스 생성 및 클라이언트 초기화 코드 작성",
+			"reasoning": "복잡한 데이터베이스 스키마 설계와 보안 정책 구현이 필요합니다. 테이블 간 관계 설정, RLS 정책, 암호화 등 고려사항이 많아 6개의 서브태스크로 나누어 체계적으로 진행해야 합니다."
+		},
+		{
+			"taskId": 3,
+			"taskTitle": "Supabase Auth 기반 인증 시스템 및 RBAC 구현",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "인증 시스템을 다음 단계로 구현: 1) Supabase Auth 설정 및 인증 정책 구성, 2) NextJS 미들웨어로 세션 관리 및 라우트 보호 구현, 3) 서버 액션으로 인증 함수 구현 (signIn, signOut, getSession), 4) 로그인/로그아웃 페이지 UI 구현 (shadcn/ui 활용), 5) useAuth 훅 및 보호된 라우트 HOC 구현",
+			"reasoning": "인증과 권한 관리는 보안이 중요한 핵심 기능입니다. Supabase Auth 설정, 미들웨어, UI, 커스텀 훅 등 각 레이어별로 구현이 필요하여 5개의 서브태스크가 적절합니다."
+		},
+		{
+			"taskId": 4,
+			"taskTitle": "shadcn/ui 기반 디자인 시스템 및 레이아웃 구축",
+			"complexityScore": 5,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "디자인 시스템 구축을 단계별로 진행: 1) shadcn/ui 초기 설정 및 필수 컴포넌트 설치, 2) 테마 시스템 구현 (컬러 팔레트, 다크모드, 폰트), 3) 레이아웃 컴포넌트 구현 (RootLayout, DashboardLayout, MobileLayout), 4) 공통 컴포넌트 및 네비게이션 구현 (역할별 메뉴, 접근성 최적화)",
+			"reasoning": "UI 프레임워크 설정과 컴포넌트 구축은 비교적 직관적인 작업입니다. shadcn/ui가 많은 부분을 제공하므로 4개의 서브태스크로 효율적으로 구현 가능합니다."
+		},
+		{
+			"taskId": 5,
+			"taskTitle": "환자 설문 시스템 구현 (토큰 생성, 4단계 폼, 자동 환자 생성)",
+			"complexityScore": 8,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "설문 시스템을 다음 구성요소로 구현: 1) 설문 토큰 생성 API 및 24시간 만료 로직 구현, 2) 4단계 설문 폼 UI 구현 (react-hook-form, zod 스키마), 3) 주소 API 연동 및 주민번호 마스킹 입력 구현, 4) 주민번호 암호화 및 보안 처리 구현, 5) 설문 제출 트랜잭션 및 환자 레코드 자동 생성, 6) 실시간 BD 알림 및 진행률 자동 저장 기능",
+			"reasoning": "복잡한 멀티스텝 폼, 보안 요구사항(주민번호 암호화), 외부 API 연동, 트랜잭션 처리 등 다양한 기술적 과제가 있어 6개의 서브태스크가 필요합니다."
+		},
+		{
+			"taskId": 6,
+			"taskTitle": "환자 관리 시스템 구현 (CRUD, 상태 관리, 의료정보)",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "환자 관리 시스템을 단계별로 구축: 1) 환자 목록 페이지 구현 (TanStack Table, 페이지네이션, 필터링), 2) 환자 상세 페이지 탭 구조 구현, 3) 상태 관리 워크플로우 및 역할별 권한 구현, 4) 의료정보 폼 구현 (동적 필드, 질환 플래그 자동 매핑), 5) 감사 로그 및 동시 편집 방지 기능 구현",
+			"reasoning": "CRUD 기능과 복잡한 상태 관리, 의료정보 처리 로직이 필요합니다. 각 기능이 독립적이면서도 통합되어야 하므로 5개의 서브태스크로 구성이 적절합니다."
+		},
+		{
+			"taskId": 7,
+			"taskTitle": "예약 관리 시스템 및 캘린더 뷰 구현",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "예약 시스템을 다음 단계로 구현: 1) 예약 생성 모달 및 시간 충돌 검사 로직 구현, 2) 캘린더 뷰 구현 (월/주/일 뷰, 드래그앤드롭), 3) 예약 변경/취소 기능 및 이력 관리 구현, 4) 리마인더 시스템 구현 (자동 알림, No-show 방지), 5) 예약 관련 통계 및 리포트 기능",
+			"reasoning": "캘린더 UI, 시간 충돌 로직, 알림 시스템 등 복잡한 기능들이 포함됩니다. 각 기능이 독립적으로 개발 가능하여 5개의 서브태스크가 효율적입니다."
+		},
+		{
+			"taskId": 8,
+			"taskTitle": "실시간 대시보드 및 통계 시스템 구현",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "대시보드 시스템을 단계별로 구축: 1) Supabase Realtime 구독 설정 및 실시간 업데이트 구현, 2) 역할별 대시보드 위젯 구현 (BD/CS/Manager 맞춤형), 3) 통계 집계 함수 및 차트 시각화 구현 (Recharts), 4) 실시간 알림 토스트 및 성능 최적화",
+			"reasoning": "실시간 기능과 데이터 시각화가 핵심이지만, Supabase Realtime과 Recharts가 많은 기능을 제공하므로 4개의 서브태스크로 충분합니다."
+		},
+		{
+			"taskId": 9,
+			"taskTitle": "검색, 필터링, 보고서 생성 및 관리자 기능",
+			"complexityScore": 6,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "관리자 기능을 다음 구성요소로 구현: 1) 고급 검색 기능 구현 (풀텍스트 검색, 필터 빌더), 2) Excel/PDF 보고서 생성 기능 구현, 3) 사용자 관리 인터페이스 구현 (CRUD, 권한 관리), 4) 시스템 설정 관리 기능 (검사 항목, 영업시간, 공휴일), 5) 감사 로그 뷰어 및 활동 추적 기능",
+			"reasoning": "다양한 관리자 기능들이 포함되지만 각각 독립적으로 구현 가능합니다. 검색, 보고서, 사용자 관리 등으로 나누어 5개의 서브태스크가 적절합니다."
+		},
+		{
+			"taskId": 10,
+			"taskTitle": "성능 최적화, 보안 강화 및 프로덕션 배포",
+			"complexityScore": 7,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "프로덕션 준비를 단계별로 진행: 1) 성능 최적화 구현 (React Query 캐싱, 코드 스플리팅, 이미지 최적화), 2) 보안 강화 구현 (보안 헤더, OWASP 대응, 취약점 스캔), 3) 모니터링 시스템 구축 (Sentry, Analytics, 커스텀 메트릭), 4) CI/CD 파이프라인 구축 (GitHub Actions, 자동 테스트), 5) 프로덕션 배포 및 롤백 계획 수립",
+			"reasoning": "프로덕션 배포는 성능, 보안, 모니터링, 자동화 등 다양한 측면을 다뤄야 합니다. 각 영역별로 독립적인 작업이 가능하여 5개의 서브태스크가 적합합니다."
+		}
+	]
+}

@@ -1,0 +1,178 @@
+# Task ID: 1
+# Title: NextJS 14 프로젝트 초기 설정 및 개발 환경 구성
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: NextJS 14.2+ App Router 기반 프로젝트 생성, TypeScript 5.3+ 설정, 개발/스테이징/프로덕션 환경 분리 및 필수 의존성 설치
+# Details:
+1. npx create-next-app@latest hospital-pms --typescript --app --tailwind 실행
+2. TypeScript 엄격 모드 설정 (tsconfig.json: strict: true)
+3. 환경 변수 파일 구성 (.env.local, .env.staging, .env.production)
+4. 필수 패키지 설치:
+   - @supabase/supabase-js @supabase/ssr
+   - @tanstack/react-query zustand
+   - tailwindcss@latest @tailwindcss/forms @tailwindcss/typography
+   - framer-motion
+   - zod react-hook-form @hookform/resolvers
+5. ESLint, Prettier 설정 및 husky pre-commit 훅 구성
+6. src/ 디렉토리 구조 설정 (app/, components/, lib/, hooks/, types/, utils/)
+7. next.config.js 최적화 설정 (이미지, 보안 헤더)
+
+# Test Strategy:
+1. TypeScript 컴파일 성공 확인
+2. 개발 서버 정상 실행 확인 (npm run dev)
+3. 환경 변수 로딩 테스트
+4. 빌드 성공 확인 (npm run build)
+5. Vercel 프리뷰 배포 테스트
+
+# Subtasks:
+## 1. create-next-app으로 프로젝트 생성 및 TypeScript 설정 [done]
+### Dependencies: None
+### Description: NextJS 14.2+ App Router 기반 프로젝트를 생성하고 TypeScript 5.3+의 엄격 모드를 설정합니다.
+### Details:
+1. npx create-next-app@latest hospital-pms --typescript --app --tailwind 실행
+2. tsconfig.json 파일 수정:
+   - strict: true 설정
+   - strictNullChecks, noImplicitAny, strictFunctionTypes 활성화
+   - baseUrl: "./", paths 설정 (예: "@/*": ["src/*"])
+3. next.config.js 기본 설정 구성
+4. 프로젝트 루트 디렉토리 정리 및 초기 파일 생성
+<info added on 2025-07-17T13:00:31.498Z>
+NextJS 14 프로젝트가 성공적으로 생성되었습니다. TypeScript 엄격 모드 설정 완료 - strictNullChecks, noImplicitAny, strictFunctionTypes 모두 활성화했습니다. tsconfig.json에 baseUrl과 paths 설정을 완료했습니다. next.config.ts 파일에 reactStrictMode, 보안 헤더, experimental typed routes 설정을 구성했습니다. 보일러플레이트 파일들을 정리하고 최소한의 시작 구조를 준비했습니다. 빌드 유효성 검증이 성공적으로 통과했습니다.
+</info added on 2025-07-17T13:00:31.498Z>
+
+## 2. 환경 변수 구성 및 디렉토리 구조 설정 [done]
+### Dependencies: 1.1
+### Description: 개발/스테이징/프로덕션 환경별 설정 파일을 구성하고 프로젝트 디렉토리 구조를 설정합니다.
+### Details:
+1. 환경 변수 파일 생성:
+   - .env.local (개발용)
+   - .env.staging (스테이징용)
+   - .env.production (프로덕션용)
+   - .env.example (템플릿)
+2. src/ 디렉토리 구조 생성:
+   - app/ (라우트 및 페이지)
+   - components/ (재사용 컴포넌트)
+   - lib/ (유틸리티 및 설정)
+   - hooks/ (커스텀 훅)
+   - types/ (TypeScript 타입 정의)
+   - styles/ (글로벌 스타일)
+3. .gitignore 업데이트 (환경 변수 파일 제외)
+<info added on 2025-07-17T13:49:54.626Z>
+4. TypeScript 환경 변수 타입 안전성 구현:
+   - src/lib/utils/env.ts 파일 생성
+   - NEXT_PUBLIC_ENV 변수 추가로 staging 환경 지원
+   - 모든 환경 변수 파일에 NEXT_PUBLIC_ENV 설정 추가
+   - 빌드 및 타입 체크 검증 완료 (npm run build, npx tsc --noEmit)
+   - 개발 서버 정상 실행 확인 (npm run dev)
+</info added on 2025-07-17T13:49:54.626Z>
+
+## 3. 필수 의존성 패키지 설치 (Supabase, React Query, Tailwind 확장) [done]
+### Dependencies: 1.2
+### Description: 프로젝트에 필요한 핵심 라이브러리와 UI 관련 패키지를 설치합니다.
+### Details:
+1. 상태 관리 및 데이터 페칭:
+   - npm install @tanstack/react-query zustand
+   - npm install @supabase/supabase-js @supabase/ssr
+2. UI 및 스타일링:
+   - npm install @tailwindcss/forms @tailwindcss/typography
+   - npm install framer-motion
+   - npm install clsx tailwind-merge
+3. 폼 처리 및 검증:
+   - npm install react-hook-form @hookform/resolvers zod
+4. 유틸리티:
+   - npm install date-fns axios
+5. package.json 스크립트 업데이트
+<info added on 2025-07-17T14:29:44.443Z>
+NextJS 14 병원 관리 시스템에 필요한 모든 의존성 패키지를 성공적으로 설치했습니다. 설치된 패키지는 다음과 같습니다:
+
+1) 코어 프레임워크 - TypeScript 지원이 포함된 Next.js 14
+2) 데이터베이스 및 인증 - Supabase 통합을 위한 @supabase/supabase-js 및 @supabase/ssr
+3) 상태 관리 - 서버 상태를 위한 @tanstack/react-query 및 클라이언트 상태를 위한 zustand
+4) UI 및 스타일링 - @tailwindcss/forms 및 @tailwindcss/typography 플러그인이 포함된 Tailwind CSS, 애니메이션을 위한 framer-motion, 조건부 스타일링을 위한 clsx 및 tailwind-merge
+5) 폼 처리 - @hookform/resolvers가 포함된 react-hook-form 및 검증을 위한 zod
+6) 유틸리티 - 날짜 조작을 위한 date-fns 및 HTTP 요청을 위한 axios
+
+모든 패키지가 호환성을 보장하기 위해 정확한 버전으로 설치되었습니다. 개발, 빌드 및 프로덕션 워크플로우를 위한 package.json 스크립트를 업데이트했습니다. 모든 의존성이 제대로 설치되었고 피어 의존성 경고가 없음을 확인했습니다.
+</info added on 2025-07-17T14:29:44.443Z>
+
+## 4. 개발 도구 설정 (ESLint, Prettier, Husky) [done]
+### Dependencies: 1.3
+### Description: 코드 품질 관리를 위한 린터, 포매터, Git 훅을 설정합니다.
+### Details:
+1. ESLint 설정:
+   - npm install -D eslint-config-prettier eslint-plugin-tailwindcss
+   - .eslintrc.json 커스터마이징 (NextJS 권장 설정 + 추가 규칙)
+2. Prettier 설정:
+   - npm install -D prettier prettier-plugin-tailwindcss
+   - .prettierrc 파일 생성 (세미콜론, 따옴표, 들여쓰기 설정)
+3. Husky 및 lint-staged 설정:
+   - npm install -D husky lint-staged
+   - npx husky install
+   - pre-commit 훅 설정 (린트, 포맷, 타입 체크)
+4. Cursor IDE 설정 파일 (.vscode/settings.json) 생성 (Cursor는 VSCode 설정 호환)
+<info added on 2025-07-17T14:59:08.959Z>
+구현 완료 상세 내역:
+
+1. ESLint 설정 완료:
+   - eslint-config-prettier와 eslint-plugin-tailwindcss 설치
+   - .eslintrc.json 파일 생성 (Next.js 권장 설정 + TypeScript strict 모드 커스텀 규칙 포함)
+   - import 순서 및 미사용 변수 규칙 추가
+
+2. Prettier 설정 완료:
+   - prettier 및 prettier-plugin-tailwindcss 설치 (Tailwind CSS 클래스 자동 정렬)
+   - .prettierrc 파일 생성 (semi=true, singleQuote=true, tabWidth=2, trailingComma='es5')
+   - ESLint와 충돌 방지를 위한 통합 설정
+
+3. Husky Git 훅 설정 완료:
+   - husky 및 lint-staged 설치
+   - 'npx husky install'로 초기화
+   - pre-commit 훅 생성:
+     * staged 파일 ESLint 검사
+     * staged 파일 Prettier 포맷팅
+     * TypeScript 타입 체크 (tsc --noEmit)
+   - package.json에 자동 husky 설치를 위한 prepare 스크립트 추가
+
+4. 에디터 설정 완료:
+   - .vscode/settings.json 생성 (Cursor IDE용, VSCode 호환)
+   - 저장 시 자동 포맷팅 설정
+   - ESLint와 Prettier를 기본 포매터로 설정
+   - TypeScript import 자동 정리 설정
+
+5. package.json 스크립트 추가:
+   - 'lint': 전체 코드베이스 ESLint 실행
+   - 'lint:fix': ESLint 이슈 자동 수정
+   - 'format': 전체 코드베이스 Prettier 실행
+   - 'type-check': TypeScript 컴파일러 no-emit 모드 실행
+
+모든 도구가 연동되어 커밋 시 자동으로 코드 품질 표준을 적용하도록 설정 완료.
+</info added on 2025-07-17T14:59:08.959Z>
+
+## 5. 개발/빌드/배포 테스트 [done]
+### Dependencies: 1.4
+### Description: 설정된 환경에서 개발 서버, 빌드, 배포 프로세스가 정상 작동하는지 검증합니다.
+### Details:
+1. 개발 서버 테스트:
+   - npm run dev 실행 및 기본 페이지 접속 확인
+   - 환경 변수 로딩 확인 (console.log로 검증)
+   - Hot Module Replacement 동작 확인
+2. TypeScript 컴파일 테스트:
+   - npm run type-check 스크립트 추가 및 실행
+   - 의도적 타입 에러 생성 후 검증
+3. 프로덕션 빌드 테스트:
+   - npm run build 실행
+   - 빌드 결과물 크기 및 최적화 확인
+4. Vercel 배포 테스트:
+   - Git 저장소 연결
+   - 프리뷰 배포 생성
+   - 환경 변수 설정 확인
+5. 초기 README.md 작성
+<info added on 2025-07-17T15:13:20.731Z>
+테스트 완료 상황:
+- 개발 서버: ✓ 포트 3000에서 정상 실행 (4.2초 소요), HMR 정상 작동 확인
+- TypeScript 검증: ✓ type-check 스크립트 추가 완료, 타입 에러 감지 기능 정상 작동
+- 프로덕션 빌드: ✓ 14초 내 빌드 완료, 최적화된 번들 생성 (First Load JS ~99.6KB)
+- README.md 문서: ✓ 프로젝트 정보, 기술 스택, 설정 가이드를 포함한 종합적인 문서 작성 완료
+- Vercel 배포: Git 저장소 연결 후 수동 설정 준비 완료
+</info added on 2025-07-17T15:13:20.731Z>
+

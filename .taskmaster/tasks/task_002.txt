@@ -1,0 +1,399 @@
+# Task ID: 2
+# Title: Supabase 프로젝트 생성 및 데이터베이스 스키마 구축
+# Status: done
+# Dependencies: 1
+# Priority: high
+# Description: Supabase 프로젝트 생성, PostgreSQL 15+ 데이터베이스 스키마 설계 및 마이그레이션, Row Level Security 정책 구현
+# Details:
+1. Supabase 프로젝트 생성 (개발/스테이징/프로덕션 각각)
+2. 데이터베이스 스키마 생성:
+   ```sql
+   -- 사용자 및 역할
+   CREATE TYPE user_role AS ENUM ('admin', 'manager', 'bd', 'cs');
+   CREATE TABLE profiles (
+     id UUID PRIMARY KEY REFERENCES auth.users,
+     role user_role NOT NULL,
+     name VARCHAR(100) NOT NULL,
+     department VARCHAR(50),
+     created_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   
+   -- 환자 정보 (주민번호 암호화 컬럼 포함)
+   CREATE TABLE patients (
+     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     name VARCHAR(100) NOT NULL,
+     phone VARCHAR(20) NOT NULL,
+     encrypted_ssn TEXT NOT NULL,
+     address JSONB,
+     status patient_status DEFAULT 'new',
+     assigned_bd UUID REFERENCES profiles(id),
+     assigned_cs UUID REFERENCES profiles(id),
+     created_at TIMESTAMPTZ DEFAULT NOW()
+   );
+   
+   -- 의료 정보
+   CREATE TABLE medical_records (
+     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     patient_id UUID REFERENCES patients(id),
+     conditions JSONB DEFAULT '{}',
+     medications TEXT[],
+     surgeries TEXT[],
+     allergies TEXT[],
+     family_history TEXT
+   );
+   
+   -- 설문 토큰 및 응답
+   CREATE TABLE survey_tokens (
+     token UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     created_by UUID REFERENCES profiles(id),
+     expires_at TIMESTAMPTZ NOT NULL,
+     used BOOLEAN DEFAULT FALSE
+   );
+   ```
+3. RLS 정책 설정 (역할별 데이터 접근 제어)
+4. 인덱스 생성 (phone, status, created_at)
+5. Supabase 클라이언트 초기화 코드 작성
+
+# Test Strategy:
+1. 모든 테이블 생성 확인
+2. RLS 정책 테스트 (각 역할별 CRUD 권한)
+3. 외래 키 제약 조건 테스트
+4. Supabase 클라이언트 연결 테스트
+5. 데이터베이스 백업/복원 테스트
+
+# Subtasks:
+## 1. Supabase 프로젝트 생성 및 환경별 설정 [done]
+### Dependencies: None
+### Description: 개발, 스테이징, 프로덕션 환경별 Supabase 프로젝트 생성하고 환경 변수 설정 및 기본 구성 완료
+### Details:
+1. Supabase 콘솔에서 3개 프로젝트 생성 (dev/staging/prod)
+2. 각 프로젝트별 Database URL, Anon Key, Service Role Key 추출
+3. .env.local, .env.staging, .env.production 파일 생성
+4. PostgreSQL 15+ 버전 확인 및 타임존 설정 (Asia/Seoul)
+5. 프로젝트별 백업 정책 설정 (프로덕션: 일일 백업)
+6. Supabase CLI 설치 및 마이그레이션 디렉토리 구성
+<info added on 2025-07-18T10:18:26.377Z>
+7. Supabase 프로젝트 설정 성공적으로 완료:
+   - npx를 통한 Supabase CLI 설치 및 검증 완료
+   - 마이그레이션 디렉토리 구조 생성 (migrations/, functions/, seed/)
+   - 환경 변수 파일이 플레이스홀더 값으로 이미 존재 확인
+   - docs/SUPABASE_SETUP.md에 종합적인 문서 작성 완료
+   - scripts/setup-supabase.sh에 대화형 설정 스크립트 생성
+   - package.json에 Supabase 관리용 npm 스크립트 추가
+   - supabase/README.md에 빠른 참조 가이드 생성
+   - config.toml을 PostgreSQL 15 사용하도록 업데이트
+   - 참고: 실제 Supabase 프로젝트는 Supabase 대시보드에서 생성하고 크리덴셜을 env 파일에 추가 필요
+</info added on 2025-07-18T10:18:26.377Z>
+
+## 2. 사용자 및 역할 관련 테이블 생성 [done]
+### Dependencies: 2.1
+### Description: auth.users와 연동되는 profiles 테이블과 user_role enum 타입 생성 및 기본 제약 조건 설정
+### Details:
+1. user_role enum 타입 생성: ('admin', 'manager', 'bd', 'cs')
+2. profiles 테이블 생성:
+   - id: UUID (auth.users 참조)
+   - role: user_role (NOT NULL)
+   - name: VARCHAR(100) (NOT NULL)
+   - department: VARCHAR(50)
+   - created_at: TIMESTAMPTZ (DEFAULT NOW())
+3. auth.users 트리거 생성 (회원가입 시 profiles 자동 생성)
+4. 기본 관리자 계정 시드 데이터 추가
+5. profiles 테이블 인덱스 생성 (role, department)
+<info added on 2025-07-18T12:12:49.210Z>
+사용자 프로필 스키마 구현 완료:
+
+1. user_role enum 타입 생성 (admin, manager, bd, cs 값 포함)
+2. auth.users와 외래 키로 연결된 profiles 테이블 생성
+3. 사용자 회원가입 시 프로필 자동 생성 트리거 구현
+4. 보안을 위한 RLS 정책 구현 (모두 조회 가능, 본인만 수정 가능, 관리자만 삽입/삭제 가능)
+5. role, department, created_at 필드에 성능 인덱스 생성
+6. 관리자 사용자를 위한 시드 데이터 파일 생성
+7. 간편한 관리자 사용자 생성을 위한 Node.js 스크립트 작성
+8. docs/USER_PROFILES_IMPLEMENTATION.md에 포괄적인 문서 작성
+
+마이그레이션 파일: supabase/migrations/20250718120829_create_user_profiles_schema.sql
+시드 파일: supabase/seed/01_admin_user.sql
+관리자 스크립트: scripts/create-admin-user.js
+
+Docker/Supabase가 사용 가능하면 테스트 준비 완료.
+</info added on 2025-07-18T12:12:49.210Z>
+
+## 3. 환자 관련 테이블 생성 및 암호화 설정 [done]
+### Dependencies: 2.2
+### Description: patients와 medical_records 테이블 생성, 주민번호 암호화 컬럼 구현 및 관계 설정
+### Details:
+1. patients 테이블 생성:
+   - id: UUID (PRIMARY KEY)
+   - name: VARCHAR(100)
+   - encrypted_ssn: BYTEA (주민번호 암호화)
+   - phone: VARCHAR(20)
+   - address: JSONB
+   - created_by: UUID (BD 참조)
+   - cs_manager: UUID (CS 참조)
+2. pgcrypto 확장 활성화 및 암호화 함수 생성
+3. medical_records 테이블 생성 (병력, 증상 등)
+4. 외래 키 제약 조건 설정
+5. 암호화/복호화 헬퍼 함수 작성
+<info added on 2025-07-18T12:23:51.181Z>
+환자 테이블 암호화 구현 완료:
+
+1. pgcrypto 확장 활성화로 암호화 기능 구현
+2. encryption_keys 테이블 생성 - 키 관리용 (service role 전용 RLS)
+3. patients 테이블 구현:
+   - encrypted_ssn (BYTEA): 암호화된 주민번호 저장
+   - ssn_hash (TEXT): 복호화 없이 검색 가능한 해시값
+   - created_by(BD), cs_manager(CS)로 profiles 테이블 참조
+   - address, emergency_contact를 JSONB로 저장
+4. medical_records 테이블 생성 및 환자 관계 설정
+5. 암호화 함수 구현:
+   - encrypt_ssn(): AES 암호화
+   - decrypt_ssn(): 권한 확인 후 복호화 (admin/manager만)
+   - hash_ssn(): SHA-256 해시 생성
+   - mask_ssn(): ***-**-1234 형식 마스킹
+6. 헬퍼 함수 추가:
+   - create_patient_with_ssn(): 암호화된 주민번호로 환자 생성
+   - find_patient_by_ssn(): 해시를 이용한 주민번호 검색
+   - get_masked_ssn(): 표시용 마스킹된 주민번호 조회
+   - update_patient_ssn(): 관리자 전용 주민번호 수정
+   - bulk_import_patients(): 관리자 일괄 가져오기
+7. 포괄적인 RLS 정책:
+   - BD: 자신이 생성한 환자 생성/조회 가능
+   - CS: 담당 환자 조회/수정 가능
+   - Admin/Manager: 전체 접근 권한
+   - 주민번호 복호화는 Admin/Manager만 가능
+8. 모든 외래키 및 검색 필드에 성능 인덱스 추가
+9. TypeScript 서비스 클래스 생성 (src/lib/patients/encryption.ts)
+10. 상세 문서화 완료 (docs/PATIENT_DATA_ENCRYPTION.md)
+
+마이그레이션 파일:
+- supabase/migrations/20250718122002_create_patient_tables_with_encryption.sql
+- supabase/migrations/20250718122146_add_patient_helper_functions.sql
+
+프로덕션 환경에서 적절한 키 관리와 함께 테스트 준비 완료.
+</info added on 2025-07-18T12:23:51.181Z>
+
+## 4. 설문 및 예약 관련 테이블 생성 [done]
+### Dependencies: 2.3
+### Description: survey_tokens, survey_responses, appointments 테이블 생성 및 관계 설정
+### Details:
+1. survey_tokens 테이블:
+   - token: UUID (PRIMARY KEY)
+   - created_by: UUID (BD 참조)
+   - expires_at: TIMESTAMPTZ
+   - used_at: TIMESTAMPTZ
+   - patient_id: UUID (사용 후 연결)
+2. survey_responses 테이블 (설문 응답 저장)
+3. appointments 테이블:
+   - id, patient_id, scheduled_at
+   - status: ENUM ('pending', 'confirmed', 'cancelled')
+   - cs_notes: TEXT
+4. 토큰 만료 자동 정리 함수 생성
+5. 예약 상태 변경 이력 테이블 추가
+<info added on 2025-07-18T12:32:48.052Z>
+구현 완료 사항:
+
+1. appointment_status 열거형 타입 생성 (pending, confirmed, cancelled, completed, no_show)
+
+2. survey_tokens 테이블 구현:
+   - UUID 기반 보안 토큰 (7일 만료)
+   - 계정 생성 전 임시 환자 정보 저장
+   - 설문 완료 후 환자 레코드 연결
+   - used_at 타임스탬프로 사용 추적
+   - 유연한 survey_data JSONB 필드
+
+3. survey_responses 테이블 생성:
+   - 유연한 JSONB 형식으로 모든 설문 답변 저장
+   - 완료 상태 및 시간 추적
+   - 토큰과 환자 모두 연결
+   - 다중 설문 유형 지원
+
+4. appointments 테이블 구현:
+   - 전체 예약 생명주기 관리
+   - 이력 포함 상태 추적
+   - CS 노트와 내부 노트 분리
+   - 리마인더 시스템 지원
+   - 상담 시간 및 유형 추적
+
+5. 감사 추적을 위한 appointment_status_history 생성:
+   - 트리거를 통한 자동 추적
+   - 변경자 및 시간 기록
+   - 선택적 사유 필드
+
+6. 헬퍼 함수:
+   - use_survey_token(): 토큰 검증 및 소비
+   - cleanup_expired_tokens(): 만료된 미사용 토큰 제거
+   - get_available_slots(): 예약 가능 시간대 표시
+   - record_appointment_status_change(): 자동 이력 기록
+
+7. 포괄적인 RLS 정책:
+   - BD는 토큰 생성/조회 가능
+   - 유효한 토큰으로 설문 공개 접근
+   - CS는 예약 관리 가능
+   - 전체 감사 추적 가시성
+
+8. 성능 최적화:
+   - 모든 외래 키에 인덱스
+   - 일반 쿼리용 부분 인덱스
+   - 예약 조회 최적화
+
+9. TypeScript 서비스 클래스:
+   - src/lib/surveys/service.ts - 설문 관리
+   - src/lib/appointments/service.ts - 예약 관리
+
+10. 완전한 문서화 (docs/SURVEY_APPOINTMENT_WORKFLOW.md)
+
+마이그레이션 파일: supabase/migrations/20250718122825_create_survey_appointment_tables.sql
+
+프론트엔드 컴포넌트와의 통합 준비 완료.
+</info added on 2025-07-18T12:32:48.052Z>
+
+## 5. RLS 정책 구현 및 역할별 권한 설정 [done]
+### Dependencies: 2.4
+### Description: 모든 테이블에 대한 Row Level Security 정책 구현하고 역할별 CRUD 권한 세분화
+### Details:
+1. 모든 테이블 RLS 활성화
+2. profiles 정책:
+   - 본인 프로필만 읽기 가능
+   - admin만 모든 프로필 수정 가능
+3. patients 정책:
+   - BD: 본인이 생성한 환자만 접근
+   - CS: 할당된 환자만 접근
+   - Manager/Admin: 모든 환자 접근
+4. survey_tokens 정책 (BD만 생성 가능)
+5. appointments 정책 (CS 수정 권한)
+6. 정책 테스트용 SQL 스크립트 작성
+<info added on 2025-07-18T12:53:05.099Z>
+## RLS 정책 구현 완료 상세 내역
+
+### 1. 향상된 RLS 마이그레이션 구성
+- **헬퍼 함수 생성**: 
+  - `auth.has_role()`: 특정 역할 확인
+  - `auth.has_any_role()`: 여러 역할 중 하나 확인
+  - `auth.current_user_role()`: 현재 사용자 역할 반환
+- **모든 정책 재구성**: 기존 정책 삭제 후 세밀한 권한 제어로 재생성
+- **필드별 제한사항 구현**:
+  - CS는 주민번호 변경 불가
+  - BD는 환자 재할당 불가
+- **시간 기반 제한**: 의료 기록은 생성 후 24시간 내에만 수정 가능
+
+### 2. Profiles 테이블 정책 향상
+- 사용자 본인 프로필 조회 가능
+- 전 직원 프로필 조회 권한
+- Admin만 역할 변경 가능
+- 트리거를 통한 자동 프로필 생성
+
+### 3. Patients 테이블 정책 향상
+- Admin/Manager: 전체 접근 권한
+- BD: 본인이 생성한 환자만 생성 및 관리
+- CS: 할당된 환자만 관리 (제한된 필드 접근)
+- 정책 수준에서 주민번호 암호화 보호
+
+### 4. Medical Records 정책 향상
+- 환자 관계를 통한 접근 제어
+- 24시간 시간 제한 편집
+- Admin 우선 권한 기능
+
+### 5. Survey/Appointment 정책 향상
+- BD 전용 토큰 생성
+- 익명 토큰 검증
+- CS 예약 관리
+- 자동 상태 이력 추적
+
+### 6. 감사 시스템 구축
+- RLS가 적용된 audit_logs 테이블
+- 민감한 작업 자동 로깅
+- Admin 전용 감사 추적 접근
+
+### 7. 테스트 인프라 구축
+- `validate_rls_policies()` 함수
+- `test_user_access()` 함수
+- 포괄적인 테스트 스위트 (supabase/tests/test_rls_policies.sql)
+- 모든 역할 및 교차 역할 보안 테스트
+
+### 8. 문서화
+- RLS 권한 매트릭스 (docs/RLS_PERMISSION_MATRIX.md)
+- 구현 가이드 (docs/RLS_IMPLEMENTATION_GUIDE.md)
+- 완전한 테스트 절차
+
+**마이그레이션 파일**: `supabase/migrations/20250718124654_enhance_rls_policies_and_permissions.sql`
+
+모든 테이블이 이제 역할 기반 접근 제어를 포함한 포괄적인 RLS 보호를 갖추게 되었습니다.
+</info added on 2025-07-18T12:53:05.099Z>
+
+## 6. 인덱스 생성 및 클라이언트 초기화 코드 작성 [done]
+### Dependencies: 2.5
+### Description: 성능 최적화를 위한 인덱스 생성과 Next.js 앱에서 사용할 Supabase 클라이언트 초기화 코드 구현
+### Details:
+1. 성능 인덱스 생성:
+   - patients(created_at, cs_manager)
+   - appointments(scheduled_at, status)
+   - survey_tokens(expires_at) WHERE used_at IS NULL
+2. Supabase 클라이언트 초기화:
+   - lib/supabase/client.ts (브라우저용)
+   - lib/supabase/server.ts (서버용)
+   - lib/supabase/middleware.ts (미들웨어용)
+3. 타입 자동 생성 설정 (supabase gen types)
+4. 데이터베이스 헬퍼 함수 작성
+5. 연결 테스트 및 타입 검증
+<info added on 2025-07-18T13:03:44.564Z>
+구현 완료 내역:
+
+1. 데이터베이스 인덱스 최적화 완료:
+   - 종합 인덱스 마이그레이션 파일 생성 (20250718125529_optimize_database_indexes.sql)
+   - 일반 쿼리 패턴용 복합 인덱스 추가
+   - 필터링 쿼리용 부분 인덱스 생성 (활성 예약, 만료 예정 토큰)
+   - 함수 기반 인덱스 구현 (대소문자 구분 없는 검색, 날짜만 추출)
+   - JSONB 필드용 GIN 인덱스 구현
+   - 시계열 데이터용 BRIN 인덱스 추가
+   - 모니터링 함수 생성: get_index_usage_stats(), find_unused_indexes()
+
+2. 향상된 Supabase 클라이언트 설정 완료:
+   - TypeScript 타입과 싱글톤 패턴을 적용한 브라우저 클라이언트 업데이트
+   - 다양한 클라이언트 타입을 포함한 종합적인 서버사이드 유틸리티 생성
+   - 역할 기반 헬퍼 함수 구현 (hasRole, requireRole)
+   - 인증 유틸리티 추가 (getUser, getUserProfile)
+
+3. 미들웨어 구현 완료:
+   - 라우트 보호 기능을 갖춘 인증 미들웨어 생성
+   - 라우트에 대한 역할 기반 접근 제어 구현
+   - 자동 세션 갱신 처리
+   - 퍼블릭 라우트 설정
+
+4. TypeScript 통합 완료:
+   - 전체 스키마 타이핑을 포함한 database.types.ts 생성
+   - 타입 안전 클라이언트 초기화
+   - 강타입 헬퍼 함수
+
+5. 데이터베이스 헬퍼 함수 완료:
+   - 환자 관리 (주민번호 포함 생성, 검색, 역할별 조회)
+   - 예약 헬퍼 (다가오는 예약, 날짜 범위)
+   - 설문 토큰 관리
+   - 역할별 대시보드 통계
+   - 에러 처리 유틸리티
+
+6. 연결 테스트 완료:
+   - 클라이언트 및 서버 연결 테스트
+   - 종합 진단 함수
+   - 헬스 체크 엔드포인트 데이터
+   - 인증, 데이터베이스, RLS, 함수 테스트
+
+7. 문서화 완료:
+   - 완전한 클라이언트 사용 가이드 (docs/SUPABASE_CLIENT_USAGE.md)
+   - 모든 클라이언트 타입에 대한 예제
+   - 모범 사례 및 일반 패턴
+   - 문제 해결 가이드
+
+생성/수정된 파일:
+- supabase/migrations/20250718125529_optimize_database_indexes.sql
+- src/lib/supabase/client.ts (향상됨)
+- src/lib/supabase/server.ts
+- src/lib/supabase/middleware.ts
+- src/middleware.ts
+- src/lib/supabase/helpers.ts
+- src/lib/supabase/test-connection.ts
+- src/types/database.types.ts
+- docs/SUPABASE_CLIENT_USAGE.md
+
+최적화된 데이터베이스와 타입 안전 클라이언트 설정으로 애플리케이션 개발 준비 완료.
+</info added on 2025-07-18T13:03:44.564Z>
+

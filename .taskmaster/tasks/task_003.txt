@@ -1,0 +1,254 @@
+# Task ID: 3
+# Title: Supabase Auth 기반 인증 시스템 및 RBAC 구현
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: 이메일/패스워드 인증, 세션 관리, 역할 기반 접근 제어(RBAC) 미들웨어, 로그인/로그아웃 페이지 구현
+# Details:
+1. Supabase Auth 설정:
+   - 이메일/패스워드 인증 활성화
+   - 세션 만료 시간 설정 (8시간)
+   - 비밀번호 정책 설정
+2. NextJS 미들웨어 구현 (middleware.ts):
+   ```typescript
+   export async function middleware(request: NextRequest) {
+     const supabase = createMiddlewareClient({ req: request });
+     const { data: { session } } = await supabase.auth.getSession();
+     
+     if (!session && !request.nextUrl.pathname.startsWith('/login')) {
+       return NextResponse.redirect(new URL('/login', request.url));
+     }
+     
+     // 역할별 라우트 접근 제어
+     const userRole = session?.user?.role;
+     if (request.nextUrl.pathname.startsWith('/admin') && userRole !== 'admin') {
+       return NextResponse.redirect(new URL('/unauthorized', request.url));
+     }
+   }
+   ```
+3. 인증 관련 서버 액션 구현:
+   - signIn, signOut, getSession
+   - getUserProfile (역할 정보 포함)
+4. 로그인/로그아웃 페이지 UI (shadcn/ui 컴포넌트)
+5. useAuth 커스텀 훅 구현
+6. 보호된 라우트 HOC 구현
+
+# Test Strategy:
+1. 로그인/로그아웃 플로우 E2E 테스트
+2. 세션 만료 및 갱신 테스트
+3. 역할별 라우트 접근 권한 테스트
+4. 비인증 사용자 리다이렉트 테스트
+5. 동시 로그인 세션 관리 테스트
+
+# Subtasks:
+## 1. Supabase Auth 초기 설정 및 인증 정책 구성 [done]
+### Dependencies: None
+### Description: Supabase 대시보드에서 Auth 설정을 구성하고, 이메일/패스워드 인증 활성화, 세션 정책 설정, 비밀번호 정책 구성
+### Details:
+1. Supabase 대시보드에서 Auth 설정 페이지 접속
+2. 이메일/패스워드 인증 활성화
+3. 세션 만료 시간 8시간으로 설정
+4. 비밀번호 정책 구성 (최소 8자, 대소문자/숫자/특수문자 포함)
+5. 이메일 템플릿 커스터마이징 (비밀번호 재설정, 환영 이메일)
+6. Supabase Auth 환경 변수 확인 및 .env 파일 업데이트
+<info added on 2025-07-18T13:15:44.509Z>
+완료된 Supabase Auth 종합 설정 사항:
+1) 대시보드 설정을 위한 상세 인증 구성 가이드 작성 - auth 프로바이더, 이메일 템플릿, URL 구성, 보안 정책 포함
+2) 모든 인증 관련 이메일 템플릿 구현 완료 (회원가입, 비밀번호 재설정, 이메일 변경) - 전문적인 스타일링과 브랜딩 적용
+3) 구성 가능한 요구사항을 갖춘 비밀번호 검증 유틸리티 개발 (길이, 대문자, 소문자, 숫자, 특수문자)
+4) 회원가입, 로그인, 로그아웃, 비밀번호 재설정, 세션 관리를 위한 auth 헬퍼 함수 개발
+5) React 통합을 위한 auth context provider와 hooks 설정
+6) 모든 인증 플로우에 에러 처리 및 사용자 피드백 메커니즘 추가
+참고: supabase/auth-config-guide.md의 상세 가이드에 따라 수동 대시보드 구성이 여전히 필요함
+</info added on 2025-07-18T13:15:44.509Z>
+
+## 2. NextJS 미들웨어 구현 및 라우트 보호 설정 [done]
+### Dependencies: None
+### Description: middleware.ts 파일을 생성하여 세션 검증, 인증 리다이렉트, 역할별 접근 제어 로직 구현
+### Details:
+1. src/middleware.ts 파일 생성
+2. createMiddlewareClient로 Supabase 클라이언트 초기화
+3. getSession()으로 현재 세션 확인
+4. 미인증 사용자 /login으로 리다이렉트
+5. 역할별 라우트 접근 권한 매핑 (admin: /admin/*, manager: /manager/* 등)
+6. matcher 패턴으로 보호할 라우트 정의
+7. 세션 갱신 로직 추가
+<info added on 2025-07-18T18:33:40.878Z>
+분석 완료 내용을 바탕으로 다음 작업 필요:
+
+**기존 구현 확인됨:**
+- middleware.ts는 updateSession만 호출하는 기본 구조
+- lib/supabase/middleware.ts에 실제 인증/권한 로직 구현됨
+- createServerClient로 Supabase 클라이언트 생성
+- getUser()로 사용자 세션 확인
+- protectedRoutes 배열로 보호 대상 라우트 정의
+- 역할별 접근 제어 로직 구현
+- 미인증 시 /login 리다이렉트
+- 권한 없음 시 /unauthorized 리다이렉트
+
+**추가 구현 필요 사항:**
+1. /unauthorized 페이지 생성 필요
+2. 라우트 매칭 패턴 개선 (현재는 startsWith만 사용)
+3. 세션 갱신 로직 강화 (현재는 기본 updateSession만 사용)
+4. 로깅 및 에러 처리 추가 (현재는 console.error만 사용)
+
+**개선 제안:**
+- 정규식 기반 라우트 매칭으로 더 세밀한 제어
+- 세션 만료 시간 체크 및 자동 갱신 로직
+- 접근 시도 로깅 (감사 추적용)
+- 에러 발생 시 사용자 친화적 처리
+</info added on 2025-07-18T18:33:40.878Z>
+
+## 3. 서버 액션으로 인증 함수 구현 [done]
+### Dependencies: None
+### Description: app/actions/auth.ts에 signIn, signOut, getSession, updatePassword 등 서버 액션 함수 구현
+### Details:
+1. app/actions/auth.ts 파일 생성
+2. 'use server' 지시문 추가
+3. signIn 함수: 이메일/패스워드 검증, 로그인 처리
+4. signOut 함수: 세션 종료 처리
+5. getSession 함수: 현재 세션 정보 반환
+6. getCurrentUser 함수: profiles 테이블 조인하여 역할 정보 포함
+7. updatePassword 함수: 비밀번호 변경
+8. 에러 핸들링 및 타입 안전성 보장
+<info added on 2025-07-18T18:48:46.875Z>
+서버 액션 구현 계획:
+
+1. 디렉토리 구조 분석 완료:
+   - 현재 서버 액션 파일 없음 (app/actions 디렉토리 생성 필요)
+   - 기존 auth 헬퍼 함수들은 클라이언트 사이드 위주로 구현됨
+   - Supabase 서버 클라이언트 생성 함수들은 이미 구현됨
+
+2. 구현할 서버 액션 함수들:
+   - signIn: 이메일/패스워드 로그인 (서버 사이드)
+   - signOut: 로그아웃 처리
+   - getSession: 현재 세션 정보 조회
+   - getCurrentUser: 프로필 정보 포함한 사용자 정보 조회
+   - updatePassword: 비밀번호 변경
+   - resetPasswordRequest: 비밀번호 재설정 요청
+   - verifyEmail: 이메일 인증 처리
+
+3. 구현 방향:
+   - Next.js App Router의 서버 액션 패턴 사용
+   - 'use server' 지시문으로 서버 전용 함수 표시
+   - createActionClient() 사용하여 쿠키 기반 인증 처리
+   - 타입 안전성을 위한 Zod 스키마 검증
+   - 에러 처리 및 한국어 메시지 반환
+
+4. 주요 고려사항:
+   - 서버 액션은 POST 요청으로만 호출 가능
+   - FormData 또는 일반 객체 파라미터 지원
+   - 반환값은 직렬화 가능해야 함
+   - 프로필 테이블과 조인하여 역할 정보 포함
+</info added on 2025-07-18T18:48:46.875Z>
+
+## 4. 로그인/로그아웃 페이지 UI 구현 [done]
+### Dependencies: 3.3
+### Description: shadcn/ui 컴포넌트를 활용하여 로그인 페이지, 로그아웃 확인 다이얼로그, 비밀번호 재설정 폼 구현
+### Details:
+1. app/login/page.tsx 생성
+2. shadcn/ui Form, Input, Button 컴포넌트 활용
+3. react-hook-form + zod 스키마 검증
+4. 로그인 폼: 이메일, 패스워드 입력
+5. 로딩 상태 및 에러 메시지 표시
+6. 비밀번호 재설정 링크 추가
+7. 로그아웃 확인 다이얼로그 컴포넌트
+8. 모바일 반응형 디자인 적용
+<info added on 2025-07-18T18:57:43.816Z>
+Task 3.4 분석 완료. 구현 계획:
+
+## 현재 상태 분석:
+1. shadcn/ui가 아직 설치되지 않음 - 설치 필요
+2. 기존 auth actions와 types는 잘 구현되어 있음 (signIn, signOut, resetPasswordRequest 등)
+3. PasswordStrengthIndicator 컴포넌트는 이미 존재하며 Tailwind CSS로 스타일링됨
+4. react-hook-form과 zod는 이미 설치되어 있음
+5. Tailwind CSS 설정 파일이 없음 - 생성 필요
+
+## 구현 단계:
+1. Tailwind CSS 설정 파일 생성 (tailwind.config.ts)
+2. shadcn/ui 초기화 및 필요한 컴포넌트 설치
+   - Button, Input, Form, Label, Card, Dialog, AlertDialog 컴포넌트
+3. 로그인 페이지 구현 (app/login/page.tsx)
+   - react-hook-form + zod 스키마 활용
+   - 로딩 상태 및 에러 처리
+   - 비밀번호 재설정 링크
+4. 로그아웃 확인 다이얼로그 컴포넌트 구현
+5. 비밀번호 재설정 페이지 구현 (app/reset-password/page.tsx)
+6. 모바일 반응형 디자인 적용
+
+## 주요 고려사항:
+- 기존 auth actions 재사용
+- 한국어 에러 메시지 처리 (이미 구현됨)
+- 다크모드 지원 (globals.css에 이미 설정됨)
+- 접근성 고려 (ARIA labels, keyboard navigation)
+</info added on 2025-07-18T18:57:43.816Z>
+
+## 5. useAuth 훅 및 보호된 라우트 HOC 구현 [done]
+### Dependencies: 3.3
+### Description: 클라이언트 컴포넌트에서 사용할 useAuth 커스텀 훅과 ProtectedRoute HOC 컴포넌트 구현
+### Details:
+1. hooks/useAuth.ts 생성
+2. useAuth 훅: user, session, signIn, signOut 메서드 제공
+3. Supabase onAuthStateChange 리스너 설정
+4. 세션 자동 갱신 처리
+5. components/ProtectedRoute.tsx HOC 생성
+6. 역할 기반 접근 제어 로직
+7. 로딩 상태 처리 (스켈레톤 UI)
+8. 권한 없음 페이지 리다이렉트
+<info added on 2025-07-18T19:09:19.820Z>
+구현 계획:
+1. useAuth 훅 개선
+   - 현재 구현은 이미 잘 되어 있음
+   - signIn 메서드 추가 (서버 액션 활용)
+   - 역할(role) 정보 추가
+
+2. ProtectedRoute HOC 구현
+   - 인증 상태 확인
+   - 역할 기반 접근 제어
+   - 로딩 상태 처리 (스켈레톤 UI)
+   - 권한 없음 페이지 리다이렉트
+
+3. 데이터베이스 타입 정의
+   - user_role enum 타입 정의 (admin, manager, bd, cs)
+   - database.types.ts 파일 작성
+
+4. 테스트 컴포넌트 작성
+   - 보호된 라우트 사용 예시
+   - 역할별 접근 제어 데모
+</info added on 2025-07-18T19:09:19.820Z>
+
+## 6. 비밀번호 재설정 이메일 요청 페이지 구현 [done]
+### Dependencies: 3.4
+### Description: 사용자가 비밀번호를 잊어버렸을 때 이메일로 재설정 링크를 받을 수 있는 페이지 구현 (/reset-password)
+### Details:
+1. /app/reset-password/page.tsx 생성
+2. 이메일 입력 폼 구현 (shadcn/ui 컴포넌트 활용)
+3. resetPasswordRequest 서버 액션 호출
+4. 성공 시 이메일 발송 안내 메시지 표시
+5. 로딩 상태 및 에러 처리
+6. 로그인 페이지로 돌아가기 링크
+
+## 7. 비밀번호 재설정 토큰 검증 및 새 비밀번호 설정 페이지 구현 [done]
+### Dependencies: 3.6
+### Description: 이메일로 받은 재설정 링크를 통해 접속하는 페이지로, 토큰을 검증하고 새 비밀번호를 설정하는 기능 구현 (/auth/reset-password)
+### Details:
+1. /app/auth/reset-password/page.tsx 생성
+2. URL 파라미터에서 토큰 추출 및 검증
+3. 새 비밀번호와 확인 입력 폼 구현
+4. 비밀번호 강도 표시 컴포넌트 통합
+5. updatePasswordWithToken 서버 액션 구현 및 호출
+6. 성공 시 로그인 페이지로 리다이렉트
+7. 토큰 만료 또는 무효 시 에러 처리
+
+## 8. 비밀번호 강도 표시 컴포넌트 및 서버 액션 구현 [done]
+### Dependencies: 3.7
+### Description: 비밀번호 입력 시 실시간으로 강도를 표시하는 컴포넌트와 updatePasswordWithToken 서버 액션 구현
+### Details:
+1. /components/auth/password-strength.tsx 컴포넌트 생성
+2. 비밀번호 강도 계산 로직 (대소문자, 숫자, 특수문자, 길이)
+3. 시각적 강도 표시 (색상 바, 텍스트)
+4. updatePasswordWithToken 서버 액션 추가
+5. Supabase auth.updateUser() 활용
+6. 토큰 검증 및 비밀번호 업데이트
+7. 감사 로그 기록
+

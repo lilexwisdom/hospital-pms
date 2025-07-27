@@ -1,0 +1,95 @@
+# Task ID: 9
+# Title: 검색, 필터링, 보고서 생성 및 관리자 기능
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: 고급 검색 기능, Excel/PDF 보고서 생성, 사용자 관리, 시스템 설정 및 마스터 데이터 관리
+# Details:
+1. 고급 검색 구현:
+   - 풀텍스트 검색 (PostgreSQL tsvector)
+   - 다중 조건 필터 빌더
+   - 검색 결과 하이라이팅
+   - 검색 히스토리 저장
+2. 보고서 생성:
+   ```typescript
+   // Excel 생성 (ExcelJS)
+   async function generateExcelReport(data: any[]) {
+     const workbook = new ExcelJS.Workbook();
+     const worksheet = workbook.addWorksheet('환자 리포트');
+     // 스타일링 및 데이터 삽입
+     return workbook.xlsx.writeBuffer();
+   }
+   ```
+3. 사용자 관리 (Admin only):
+   - 계정 생성/수정/비활성화
+   - 역할 변경
+   - 접속 이력 조회
+   - 비밀번호 초기화
+4. 시스템 설정:
+   - 검사 항목 CRUD
+   - 병원 정보 관리
+   - 영업시간 설정
+   - 공휴일 관리
+5. 감사 로그 뷰어:
+   - 시간별 필터링
+   - 사용자별 활동 추적
+   - 민감정보 접근 로그
+
+# Test Strategy:
+1. 10만 건 데이터 검색 성능 테스트
+2. 대용량 Excel 생성 테스트
+3. 권한 변경 즉시 반영 테스트
+4. 시스템 설정 변경 영향도 테스트
+5. 감사 로그 무결성 테스트
+
+# Subtasks:
+## 1. 고급 검색 및 필터 빌더 구현 [pending]
+### Dependencies: None
+### Description: PostgreSQL 풀텍스트 검색과 다중 조건 필터 빌더를 구현하여 환자, 내원 기록, 설문 데이터 등을 효율적으로 검색할 수 있는 시스템 구축
+### Details:
+- PostgreSQL tsvector를 활용한 한글 풀텍스트 검색 구현
+- React Hook Form과 Zod를 활용한 동적 필터 빌더 UI 구성
+- 검색 조건 저장 및 재사용 기능
+- 검색 결과 하이라이팅 및 페이지네이션
+- 검색 히스토리 및 자주 사용하는 검색 조건 관리
+
+## 2. Excel/PDF 보고서 생성 시스템 구현 [pending]
+### Dependencies: 9.1
+### Description: ExcelJS와 jsPDF를 활용하여 환자 데이터, 통계 정보, 실적 보고서 등을 Excel 및 PDF 형식으로 다운로드할 수 있는 기능 구현
+### Details:
+- ExcelJS를 사용한 스타일링된 Excel 보고서 생성
+- jsPDF와 html2canvas를 활용한 PDF 보고서 생성
+- 대용량 데이터 스트리밍 처리
+- 보고서 템플릿 관리 시스템
+- 백그라운드 작업 큐를 통한 대용량 보고서 생성
+
+## 3. 사용자 관리 인터페이스 구현 [pending]
+### Dependencies: None
+### Description: 관리자 전용 사용자 계정 관리 페이지 구현 - 계정 생성, 수정, 비활성화, 역할 및 권한 관리 기능 포함
+### Details:
+- Supabase Auth Admin API를 활용한 사용자 CRUD
+- 역할 변경 및 권한 관리 UI
+- 사용자 접속 이력 및 활동 로그 조회
+- 비밀번호 초기화 및 임시 비밀번호 발급
+- 부서별 사용자 그룹 관리
+
+## 4. 시스템 설정 관리 기능 구현 [pending]
+### Dependencies: None
+### Description: 검사 항목, 병원 영업시간, 공휴일 설정 등 시스템 전반의 마스터 데이터를 관리할 수 있는 관리자 인터페이스 구현
+### Details:
+- 검사 항목 CRUD 인터페이스
+- 병원 영업시간 및 휴무일 캘린더 관리
+- 공휴일 자동 연동 및 수동 설정
+- 시스템 전역 설정 (타임아웃, 세션 관리 등)
+- 설정 변경 이력 추적 및 롤백 기능
+
+## 5. 감사 로그 뷰어 및 활동 추적 시스템 [pending]
+### Dependencies: 9.3, 9.4
+### Description: 모든 사용자 활동을 추적하고 감사 로그를 조회, 분석할 수 있는 관리자 도구 구현
+### Details:
+- PostgreSQL 트리거를 활용한 자동 로그 기록
+- 상세 활동 로그 조회 인터페이스
+- 로그 필터링 및 고급 검색 기능
+- 이상 활동 감지 및 알림 시스템
+- 로그 아카이빙 및 보관 정책 관리
+

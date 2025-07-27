@@ -1,0 +1,74 @@
+# Task ID: 4
+# Title: shadcn/ui 기반 디자인 시스템 및 레이아웃 구축
+# Status: done
+# Dependencies: 3
+# Priority: medium
+# Description: shadcn/ui 컴포넌트 설정, 테마 시스템, 반응형 레이아웃, 네비게이션 구조 및 공통 컴포넌트 구현
+# Details:
+1. shadcn/ui 초기 설정:
+   ```bash
+   npx shadcn-ui@latest init
+   npx shadcn-ui@latest add button card dialog form input label select table tabs toast
+   ```
+2. 테마 설정 (globals.css):
+   - 병원 브랜드 컬러 팔레트
+   - 다크 모드 지원
+   - 폰트 시스템 (Pretendard)
+3. 레이아웃 컴포넌트 구현:
+   - RootLayout: 전체 앱 래퍼
+   - DashboardLayout: 사이드바 + 헤더 + 콘텐츠
+   - MobileLayout: 모바일 최적화 레이아웃
+4. 네비게이션 구조:
+   - 역할별 동적 메뉴 생성
+   - 활성 상태 표시
+   - 모바일 햄버거 메뉴
+5. 공통 컴포넌트:
+   - PageHeader, DataTable, SearchInput
+   - StatusBadge, LoadingSpinner, ErrorBoundary
+6. 접근성 최적화 (ARIA labels, 키보드 네비게이션)
+
+# Test Strategy:
+1. 모든 브레이크포인트 반응형 테스트
+2. 컴포넌트 스토리북 테스트
+3. 다크 모드 전환 테스트
+4. 키보드 접근성 테스트
+5. 스크린 리더 호환성 테스트
+
+# Subtasks:
+## 1. shadcn/ui 초기 설정 및 필수 컴포넌트 설치 [done]
+### Dependencies: None
+### Description: Next.js 프로젝트에 shadcn/ui를 초기화하고, 병원 PMS에 필요한 핵심 UI 컴포넌트들(button, card, dialog, form, input, label, select, table, tabs, toast 등)을 설치 및 설정합니다. Tailwind CSS 설정과 기본 테마 구성을 포함합니다.
+### Details:
+<info added on 2025-07-18T19:36:02.884Z>
+병원 PMS 프로젝트의 shadcn/ui 초기 설정을 성공적으로 완료했습니다. 
+
+구체적인 설정 내용:
+- Tailwind CSS v3 및 tailwindcss-animate 설치 완료
+- shadcn/ui를 New York 스타일과 Neutral 색상 스키마로 초기화
+- 필수 UI 컴포넌트 설치: button, card, dialog, input, label, select, table, tabs, toast, badge, checkbox, dropdown-menu, separator, avatar, sheet, scroll-area
+- globals.css에 CSS 변수 설정 완료
+- components.json 구성 파일 설정
+- 루트 레이아웃에 Toaster 컴포넌트 추가
+- 테마 구성 파일 생성 완료
+
+모든 컴포넌트가 애플리케이션에서 사용 가능한 상태로 준비되었습니다.
+</info added on 2025-07-18T19:36:02.884Z>
+
+## 2. 병원 테마 시스템 및 다크 모드 구현 [done]
+### Dependencies: None
+### Description: 병원 브랜드 아이덴티티를 반영한 커스텀 테마 시스템을 구축합니다. 색상 팔레트, 타이포그래피(Pretendard 폰트), 다크 모드 지원, CSS 변수 설정 등을 포함합니다.
+### Details:
+
+
+## 3. 반응형 레이아웃 컴포넌트 구현 [done]
+### Dependencies: None
+### Description: RootLayout(전체 앱 래퍼), DashboardLayout(사이드바 + 헤더 + 콘텐츠), MobileLayout(모바일 최적화) 등 핵심 레이아웃 컴포넌트를 구현합니다. 모든 브레이크포인트에서 완벽한 반응형 디자인을 보장합니다.
+### Details:
+
+
+## 4. 공통 UI 컴포넌트 및 네비게이션 구축 [done]
+### Dependencies: None
+### Description: PageHeader, DataTable, SearchInput, StatusBadge, LoadingSpinner, ErrorBoundary 등 재사용 가능한 공통 컴포넌트를 구현합니다. 역할별 동적 메뉴 생성, 활성 상태 표시, 모바일 햄버거 메뉴를 포함한 네비게이션 시스템을 구축하고, ARIA labels와 키보드 네비게이션을 통한 접근성을 최적화합니다.
+### Details:
+
+

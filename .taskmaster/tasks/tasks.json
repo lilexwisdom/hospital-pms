@@ -1,0 +1,723 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "NextJS 14 프로젝트 초기 설정 및 개발 환경 구성",
+        "description": "NextJS 14.2+ App Router 기반 프로젝트 생성, TypeScript 5.3+ 설정, 개발/스테이징/프로덕션 환경 분리 및 필수 의존성 설치",
+        "details": "1. npx create-next-app@latest hospital-pms --typescript --app --tailwind 실행\n2. TypeScript 엄격 모드 설정 (tsconfig.json: strict: true)\n3. 환경 변수 파일 구성 (.env.local, .env.staging, .env.production)\n4. 필수 패키지 설치:\n   - @supabase/supabase-js @supabase/ssr\n   - @tanstack/react-query zustand\n   - tailwindcss@latest @tailwindcss/forms @tailwindcss/typography\n   - framer-motion\n   - zod react-hook-form @hookform/resolvers\n5. ESLint, Prettier 설정 및 husky pre-commit 훅 구성\n6. src/ 디렉토리 구조 설정 (app/, components/, lib/, hooks/, types/, utils/)\n7. next.config.js 최적화 설정 (이미지, 보안 헤더)",
+        "testStrategy": "1. TypeScript 컴파일 성공 확인\n2. 개발 서버 정상 실행 확인 (npm run dev)\n3. 환경 변수 로딩 테스트\n4. 빌드 성공 확인 (npm run build)\n5. Vercel 프리뷰 배포 테스트",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "create-next-app으로 프로젝트 생성 및 TypeScript 설정",
+            "description": "NextJS 14.2+ App Router 기반 프로젝트를 생성하고 TypeScript 5.3+의 엄격 모드를 설정합니다.",
+            "dependencies": [],
+            "details": "1. npx create-next-app@latest hospital-pms --typescript --app --tailwind 실행\n2. tsconfig.json 파일 수정:\n   - strict: true 설정\n   - strictNullChecks, noImplicitAny, strictFunctionTypes 활성화\n   - baseUrl: \"./\", paths 설정 (예: \"@/*\": [\"src/*\"])\n3. next.config.js 기본 설정 구성\n4. 프로젝트 루트 디렉토리 정리 및 초기 파일 생성\n<info added on 2025-07-17T13:00:31.498Z>\nNextJS 14 프로젝트가 성공적으로 생성되었습니다. TypeScript 엄격 모드 설정 완료 - strictNullChecks, noImplicitAny, strictFunctionTypes 모두 활성화했습니다. tsconfig.json에 baseUrl과 paths 설정을 완료했습니다. next.config.ts 파일에 reactStrictMode, 보안 헤더, experimental typed routes 설정을 구성했습니다. 보일러플레이트 파일들을 정리하고 최소한의 시작 구조를 준비했습니다. 빌드 유효성 검증이 성공적으로 통과했습니다.\n</info added on 2025-07-17T13:00:31.498Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "환경 변수 구성 및 디렉토리 구조 설정",
+            "description": "개발/스테이징/프로덕션 환경별 설정 파일을 구성하고 프로젝트 디렉토리 구조를 설정합니다.",
+            "dependencies": [
+              1
+            ],
+            "details": "1. 환경 변수 파일 생성:\n   - .env.local (개발용)\n   - .env.staging (스테이징용)\n   - .env.production (프로덕션용)\n   - .env.example (템플릿)\n2. src/ 디렉토리 구조 생성:\n   - app/ (라우트 및 페이지)\n   - components/ (재사용 컴포넌트)\n   - lib/ (유틸리티 및 설정)\n   - hooks/ (커스텀 훅)\n   - types/ (TypeScript 타입 정의)\n   - styles/ (글로벌 스타일)\n3. .gitignore 업데이트 (환경 변수 파일 제외)\n<info added on 2025-07-17T13:49:54.626Z>\n4. TypeScript 환경 변수 타입 안전성 구현:\n   - src/lib/utils/env.ts 파일 생성\n   - NEXT_PUBLIC_ENV 변수 추가로 staging 환경 지원\n   - 모든 환경 변수 파일에 NEXT_PUBLIC_ENV 설정 추가\n   - 빌드 및 타입 체크 검증 완료 (npm run build, npx tsc --noEmit)\n   - 개발 서버 정상 실행 확인 (npm run dev)\n</info added on 2025-07-17T13:49:54.626Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "필수 의존성 패키지 설치 (Supabase, React Query, Tailwind 확장)",
+            "description": "프로젝트에 필요한 핵심 라이브러리와 UI 관련 패키지를 설치합니다.",
+            "dependencies": [
+              2
+            ],
+            "details": "1. 상태 관리 및 데이터 페칭:\n   - npm install @tanstack/react-query zustand\n   - npm install @supabase/supabase-js @supabase/ssr\n2. UI 및 스타일링:\n   - npm install @tailwindcss/forms @tailwindcss/typography\n   - npm install framer-motion\n   - npm install clsx tailwind-merge\n3. 폼 처리 및 검증:\n   - npm install react-hook-form @hookform/resolvers zod\n4. 유틸리티:\n   - npm install date-fns axios\n5. package.json 스크립트 업데이트\n<info added on 2025-07-17T14:29:44.443Z>\nNextJS 14 병원 관리 시스템에 필요한 모든 의존성 패키지를 성공적으로 설치했습니다. 설치된 패키지는 다음과 같습니다:\n\n1) 코어 프레임워크 - TypeScript 지원이 포함된 Next.js 14\n2) 데이터베이스 및 인증 - Supabase 통합을 위한 @supabase/supabase-js 및 @supabase/ssr\n3) 상태 관리 - 서버 상태를 위한 @tanstack/react-query 및 클라이언트 상태를 위한 zustand\n4) UI 및 스타일링 - @tailwindcss/forms 및 @tailwindcss/typography 플러그인이 포함된 Tailwind CSS, 애니메이션을 위한 framer-motion, 조건부 스타일링을 위한 clsx 및 tailwind-merge\n5) 폼 처리 - @hookform/resolvers가 포함된 react-hook-form 및 검증을 위한 zod\n6) 유틸리티 - 날짜 조작을 위한 date-fns 및 HTTP 요청을 위한 axios\n\n모든 패키지가 호환성을 보장하기 위해 정확한 버전으로 설치되었습니다. 개발, 빌드 및 프로덕션 워크플로우를 위한 package.json 스크립트를 업데이트했습니다. 모든 의존성이 제대로 설치되었고 피어 의존성 경고가 없음을 확인했습니다.\n</info added on 2025-07-17T14:29:44.443Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "개발 도구 설정 (ESLint, Prettier, Husky)",
+            "description": "코드 품질 관리를 위한 린터, 포매터, Git 훅을 설정합니다.",
+            "dependencies": [
+              3
+            ],
+            "details": "1. ESLint 설정:\n   - npm install -D eslint-config-prettier eslint-plugin-tailwindcss\n   - .eslintrc.json 커스터마이징 (NextJS 권장 설정 + 추가 규칙)\n2. Prettier 설정:\n   - npm install -D prettier prettier-plugin-tailwindcss\n   - .prettierrc 파일 생성 (세미콜론, 따옴표, 들여쓰기 설정)\n3. Husky 및 lint-staged 설정:\n   - npm install -D husky lint-staged\n   - npx husky install\n   - pre-commit 훅 설정 (린트, 포맷, 타입 체크)\n4. Cursor IDE 설정 파일 (.vscode/settings.json) 생성 (Cursor는 VSCode 설정 호환)\n<info added on 2025-07-17T14:59:08.959Z>\n구현 완료 상세 내역:\n\n1. ESLint 설정 완료:\n   - eslint-config-prettier와 eslint-plugin-tailwindcss 설치\n   - .eslintrc.json 파일 생성 (Next.js 권장 설정 + TypeScript strict 모드 커스텀 규칙 포함)\n   - import 순서 및 미사용 변수 규칙 추가\n\n2. Prettier 설정 완료:\n   - prettier 및 prettier-plugin-tailwindcss 설치 (Tailwind CSS 클래스 자동 정렬)\n   - .prettierrc 파일 생성 (semi=true, singleQuote=true, tabWidth=2, trailingComma='es5')\n   - ESLint와 충돌 방지를 위한 통합 설정\n\n3. Husky Git 훅 설정 완료:\n   - husky 및 lint-staged 설치\n   - 'npx husky install'로 초기화\n   - pre-commit 훅 생성:\n     * staged 파일 ESLint 검사\n     * staged 파일 Prettier 포맷팅\n     * TypeScript 타입 체크 (tsc --noEmit)\n   - package.json에 자동 husky 설치를 위한 prepare 스크립트 추가\n\n4. 에디터 설정 완료:\n   - .vscode/settings.json 생성 (Cursor IDE용, VSCode 호환)\n   - 저장 시 자동 포맷팅 설정\n   - ESLint와 Prettier를 기본 포매터로 설정\n   - TypeScript import 자동 정리 설정\n\n5. package.json 스크립트 추가:\n   - 'lint': 전체 코드베이스 ESLint 실행\n   - 'lint:fix': ESLint 이슈 자동 수정\n   - 'format': 전체 코드베이스 Prettier 실행\n   - 'type-check': TypeScript 컴파일러 no-emit 모드 실행\n\n모든 도구가 연동되어 커밋 시 자동으로 코드 품질 표준을 적용하도록 설정 완료.\n</info added on 2025-07-17T14:59:08.959Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "개발/빌드/배포 테스트",
+            "description": "설정된 환경에서 개발 서버, 빌드, 배포 프로세스가 정상 작동하는지 검증합니다.",
+            "dependencies": [
+              4
+            ],
+            "details": "1. 개발 서버 테스트:\n   - npm run dev 실행 및 기본 페이지 접속 확인\n   - 환경 변수 로딩 확인 (console.log로 검증)\n   - Hot Module Replacement 동작 확인\n2. TypeScript 컴파일 테스트:\n   - npm run type-check 스크립트 추가 및 실행\n   - 의도적 타입 에러 생성 후 검증\n3. 프로덕션 빌드 테스트:\n   - npm run build 실행\n   - 빌드 결과물 크기 및 최적화 확인\n4. Vercel 배포 테스트:\n   - Git 저장소 연결\n   - 프리뷰 배포 생성\n   - 환경 변수 설정 확인\n5. 초기 README.md 작성\n<info added on 2025-07-17T15:13:20.731Z>\n테스트 완료 상황:\n- 개발 서버: ✓ 포트 3000에서 정상 실행 (4.2초 소요), HMR 정상 작동 확인\n- TypeScript 검증: ✓ type-check 스크립트 추가 완료, 타입 에러 감지 기능 정상 작동\n- 프로덕션 빌드: ✓ 14초 내 빌드 완료, 최적화된 번들 생성 (First Load JS ~99.6KB)\n- README.md 문서: ✓ 프로젝트 정보, 기술 스택, 설정 가이드를 포함한 종합적인 문서 작성 완료\n- Vercel 배포: Git 저장소 연결 후 수동 설정 준비 완료\n</info added on 2025-07-17T15:13:20.731Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Supabase 프로젝트 생성 및 데이터베이스 스키마 구축",
+        "description": "Supabase 프로젝트 생성, PostgreSQL 15+ 데이터베이스 스키마 설계 및 마이그레이션, Row Level Security 정책 구현",
+        "details": "1. Supabase 프로젝트 생성 (개발/스테이징/프로덕션 각각)\n2. 데이터베이스 스키마 생성:\n   ```sql\n   -- 사용자 및 역할\n   CREATE TYPE user_role AS ENUM ('admin', 'manager', 'bd', 'cs');\n   CREATE TABLE profiles (\n     id UUID PRIMARY KEY REFERENCES auth.users,\n     role user_role NOT NULL,\n     name VARCHAR(100) NOT NULL,\n     department VARCHAR(50),\n     created_at TIMESTAMPTZ DEFAULT NOW()\n   );\n   \n   -- 환자 정보 (주민번호 암호화 컬럼 포함)\n   CREATE TABLE patients (\n     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n     name VARCHAR(100) NOT NULL,\n     phone VARCHAR(20) NOT NULL,\n     encrypted_ssn TEXT NOT NULL,\n     address JSONB,\n     status patient_status DEFAULT 'new',\n     assigned_bd UUID REFERENCES profiles(id),\n     assigned_cs UUID REFERENCES profiles(id),\n     created_at TIMESTAMPTZ DEFAULT NOW()\n   );\n   \n   -- 의료 정보\n   CREATE TABLE medical_records (\n     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n     patient_id UUID REFERENCES patients(id),\n     conditions JSONB DEFAULT '{}',\n     medications TEXT[],\n     surgeries TEXT[],\n     allergies TEXT[],\n     family_history TEXT\n   );\n   \n   -- 설문 토큰 및 응답\n   CREATE TABLE survey_tokens (\n     token UUID PRIMARY KEY DEFAULT gen_random_uuid(),\n     created_by UUID REFERENCES profiles(id),\n     expires_at TIMESTAMPTZ NOT NULL,\n     used BOOLEAN DEFAULT FALSE\n   );\n   ```\n3. RLS 정책 설정 (역할별 데이터 접근 제어)\n4. 인덱스 생성 (phone, status, created_at)\n5. Supabase 클라이언트 초기화 코드 작성",
+        "testStrategy": "1. 모든 테이블 생성 확인\n2. RLS 정책 테스트 (각 역할별 CRUD 권한)\n3. 외래 키 제약 조건 테스트\n4. Supabase 클라이언트 연결 테스트\n5. 데이터베이스 백업/복원 테스트",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Supabase 프로젝트 생성 및 환경별 설정",
+            "description": "개발, 스테이징, 프로덕션 환경별 Supabase 프로젝트 생성하고 환경 변수 설정 및 기본 구성 완료",
+            "dependencies": [],
+            "details": "1. Supabase 콘솔에서 3개 프로젝트 생성 (dev/staging/prod)\n2. 각 프로젝트별 Database URL, Anon Key, Service Role Key 추출\n3. .env.local, .env.staging, .env.production 파일 생성\n4. PostgreSQL 15+ 버전 확인 및 타임존 설정 (Asia/Seoul)\n5. 프로젝트별 백업 정책 설정 (프로덕션: 일일 백업)\n6. Supabase CLI 설치 및 마이그레이션 디렉토리 구성\n<info added on 2025-07-18T10:18:26.377Z>\n7. Supabase 프로젝트 설정 성공적으로 완료:\n   - npx를 통한 Supabase CLI 설치 및 검증 완료\n   - 마이그레이션 디렉토리 구조 생성 (migrations/, functions/, seed/)\n   - 환경 변수 파일이 플레이스홀더 값으로 이미 존재 확인\n   - docs/SUPABASE_SETUP.md에 종합적인 문서 작성 완료\n   - scripts/setup-supabase.sh에 대화형 설정 스크립트 생성\n   - package.json에 Supabase 관리용 npm 스크립트 추가\n   - supabase/README.md에 빠른 참조 가이드 생성\n   - config.toml을 PostgreSQL 15 사용하도록 업데이트\n   - 참고: 실제 Supabase 프로젝트는 Supabase 대시보드에서 생성하고 크리덴셜을 env 파일에 추가 필요\n</info added on 2025-07-18T10:18:26.377Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "사용자 및 역할 관련 테이블 생성",
+            "description": "auth.users와 연동되는 profiles 테이블과 user_role enum 타입 생성 및 기본 제약 조건 설정",
+            "dependencies": [
+              1
+            ],
+            "details": "1. user_role enum 타입 생성: ('admin', 'manager', 'bd', 'cs')\n2. profiles 테이블 생성:\n   - id: UUID (auth.users 참조)\n   - role: user_role (NOT NULL)\n   - name: VARCHAR(100) (NOT NULL)\n   - department: VARCHAR(50)\n   - created_at: TIMESTAMPTZ (DEFAULT NOW())\n3. auth.users 트리거 생성 (회원가입 시 profiles 자동 생성)\n4. 기본 관리자 계정 시드 데이터 추가\n5. profiles 테이블 인덱스 생성 (role, department)\n<info added on 2025-07-18T12:12:49.210Z>\n사용자 프로필 스키마 구현 완료:\n\n1. user_role enum 타입 생성 (admin, manager, bd, cs 값 포함)\n2. auth.users와 외래 키로 연결된 profiles 테이블 생성\n3. 사용자 회원가입 시 프로필 자동 생성 트리거 구현\n4. 보안을 위한 RLS 정책 구현 (모두 조회 가능, 본인만 수정 가능, 관리자만 삽입/삭제 가능)\n5. role, department, created_at 필드에 성능 인덱스 생성\n6. 관리자 사용자를 위한 시드 데이터 파일 생성\n7. 간편한 관리자 사용자 생성을 위한 Node.js 스크립트 작성\n8. docs/USER_PROFILES_IMPLEMENTATION.md에 포괄적인 문서 작성\n\n마이그레이션 파일: supabase/migrations/20250718120829_create_user_profiles_schema.sql\n시드 파일: supabase/seed/01_admin_user.sql\n관리자 스크립트: scripts/create-admin-user.js\n\nDocker/Supabase가 사용 가능하면 테스트 준비 완료.\n</info added on 2025-07-18T12:12:49.210Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "환자 관련 테이블 생성 및 암호화 설정",
+            "description": "patients와 medical_records 테이블 생성, 주민번호 암호화 컬럼 구현 및 관계 설정",
+            "dependencies": [
+              2
+            ],
+            "details": "1. patients 테이블 생성:\n   - id: UUID (PRIMARY KEY)\n   - name: VARCHAR(100)\n   - encrypted_ssn: BYTEA (주민번호 암호화)\n   - phone: VARCHAR(20)\n   - address: JSONB\n   - created_by: UUID (BD 참조)\n   - cs_manager: UUID (CS 참조)\n2. pgcrypto 확장 활성화 및 암호화 함수 생성\n3. medical_records 테이블 생성 (병력, 증상 등)\n4. 외래 키 제약 조건 설정\n5. 암호화/복호화 헬퍼 함수 작성\n<info added on 2025-07-18T12:23:51.181Z>\n환자 테이블 암호화 구현 완료:\n\n1. pgcrypto 확장 활성화로 암호화 기능 구현\n2. encryption_keys 테이블 생성 - 키 관리용 (service role 전용 RLS)\n3. patients 테이블 구현:\n   - encrypted_ssn (BYTEA): 암호화된 주민번호 저장\n   - ssn_hash (TEXT): 복호화 없이 검색 가능한 해시값\n   - created_by(BD), cs_manager(CS)로 profiles 테이블 참조\n   - address, emergency_contact를 JSONB로 저장\n4. medical_records 테이블 생성 및 환자 관계 설정\n5. 암호화 함수 구현:\n   - encrypt_ssn(): AES 암호화\n   - decrypt_ssn(): 권한 확인 후 복호화 (admin/manager만)\n   - hash_ssn(): SHA-256 해시 생성\n   - mask_ssn(): ***-**-1234 형식 마스킹\n6. 헬퍼 함수 추가:\n   - create_patient_with_ssn(): 암호화된 주민번호로 환자 생성\n   - find_patient_by_ssn(): 해시를 이용한 주민번호 검색\n   - get_masked_ssn(): 표시용 마스킹된 주민번호 조회\n   - update_patient_ssn(): 관리자 전용 주민번호 수정\n   - bulk_import_patients(): 관리자 일괄 가져오기\n7. 포괄적인 RLS 정책:\n   - BD: 자신이 생성한 환자 생성/조회 가능\n   - CS: 담당 환자 조회/수정 가능\n   - Admin/Manager: 전체 접근 권한\n   - 주민번호 복호화는 Admin/Manager만 가능\n8. 모든 외래키 및 검색 필드에 성능 인덱스 추가\n9. TypeScript 서비스 클래스 생성 (src/lib/patients/encryption.ts)\n10. 상세 문서화 완료 (docs/PATIENT_DATA_ENCRYPTION.md)\n\n마이그레이션 파일:\n- supabase/migrations/20250718122002_create_patient_tables_with_encryption.sql\n- supabase/migrations/20250718122146_add_patient_helper_functions.sql\n\n프로덕션 환경에서 적절한 키 관리와 함께 테스트 준비 완료.\n</info added on 2025-07-18T12:23:51.181Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "설문 및 예약 관련 테이블 생성",
+            "description": "survey_tokens, survey_responses, appointments 테이블 생성 및 관계 설정",
+            "dependencies": [
+              3
+            ],
+            "details": "1. survey_tokens 테이블:\n   - token: UUID (PRIMARY KEY)\n   - created_by: UUID (BD 참조)\n   - expires_at: TIMESTAMPTZ\n   - used_at: TIMESTAMPTZ\n   - patient_id: UUID (사용 후 연결)\n2. survey_responses 테이블 (설문 응답 저장)\n3. appointments 테이블:\n   - id, patient_id, scheduled_at\n   - status: ENUM ('pending', 'confirmed', 'cancelled')\n   - cs_notes: TEXT\n4. 토큰 만료 자동 정리 함수 생성\n5. 예약 상태 변경 이력 테이블 추가\n<info added on 2025-07-18T12:32:48.052Z>\n구현 완료 사항:\n\n1. appointment_status 열거형 타입 생성 (pending, confirmed, cancelled, completed, no_show)\n\n2. survey_tokens 테이블 구현:\n   - UUID 기반 보안 토큰 (7일 만료)\n   - 계정 생성 전 임시 환자 정보 저장\n   - 설문 완료 후 환자 레코드 연결\n   - used_at 타임스탬프로 사용 추적\n   - 유연한 survey_data JSONB 필드\n\n3. survey_responses 테이블 생성:\n   - 유연한 JSONB 형식으로 모든 설문 답변 저장\n   - 완료 상태 및 시간 추적\n   - 토큰과 환자 모두 연결\n   - 다중 설문 유형 지원\n\n4. appointments 테이블 구현:\n   - 전체 예약 생명주기 관리\n   - 이력 포함 상태 추적\n   - CS 노트와 내부 노트 분리\n   - 리마인더 시스템 지원\n   - 상담 시간 및 유형 추적\n\n5. 감사 추적을 위한 appointment_status_history 생성:\n   - 트리거를 통한 자동 추적\n   - 변경자 및 시간 기록\n   - 선택적 사유 필드\n\n6. 헬퍼 함수:\n   - use_survey_token(): 토큰 검증 및 소비\n   - cleanup_expired_tokens(): 만료된 미사용 토큰 제거\n   - get_available_slots(): 예약 가능 시간대 표시\n   - record_appointment_status_change(): 자동 이력 기록\n\n7. 포괄적인 RLS 정책:\n   - BD는 토큰 생성/조회 가능\n   - 유효한 토큰으로 설문 공개 접근\n   - CS는 예약 관리 가능\n   - 전체 감사 추적 가시성\n\n8. 성능 최적화:\n   - 모든 외래 키에 인덱스\n   - 일반 쿼리용 부분 인덱스\n   - 예약 조회 최적화\n\n9. TypeScript 서비스 클래스:\n   - src/lib/surveys/service.ts - 설문 관리\n   - src/lib/appointments/service.ts - 예약 관리\n\n10. 완전한 문서화 (docs/SURVEY_APPOINTMENT_WORKFLOW.md)\n\n마이그레이션 파일: supabase/migrations/20250718122825_create_survey_appointment_tables.sql\n\n프론트엔드 컴포넌트와의 통합 준비 완료.\n</info added on 2025-07-18T12:32:48.052Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "RLS 정책 구현 및 역할별 권한 설정",
+            "description": "모든 테이블에 대한 Row Level Security 정책 구현하고 역할별 CRUD 권한 세분화",
+            "dependencies": [
+              4
+            ],
+            "details": "1. 모든 테이블 RLS 활성화\n2. profiles 정책:\n   - 본인 프로필만 읽기 가능\n   - admin만 모든 프로필 수정 가능\n3. patients 정책:\n   - BD: 본인이 생성한 환자만 접근\n   - CS: 할당된 환자만 접근\n   - Manager/Admin: 모든 환자 접근\n4. survey_tokens 정책 (BD만 생성 가능)\n5. appointments 정책 (CS 수정 권한)\n6. 정책 테스트용 SQL 스크립트 작성\n<info added on 2025-07-18T12:53:05.099Z>\n## RLS 정책 구현 완료 상세 내역\n\n### 1. 향상된 RLS 마이그레이션 구성\n- **헬퍼 함수 생성**: \n  - `auth.has_role()`: 특정 역할 확인\n  - `auth.has_any_role()`: 여러 역할 중 하나 확인\n  - `auth.current_user_role()`: 현재 사용자 역할 반환\n- **모든 정책 재구성**: 기존 정책 삭제 후 세밀한 권한 제어로 재생성\n- **필드별 제한사항 구현**:\n  - CS는 주민번호 변경 불가\n  - BD는 환자 재할당 불가\n- **시간 기반 제한**: 의료 기록은 생성 후 24시간 내에만 수정 가능\n\n### 2. Profiles 테이블 정책 향상\n- 사용자 본인 프로필 조회 가능\n- 전 직원 프로필 조회 권한\n- Admin만 역할 변경 가능\n- 트리거를 통한 자동 프로필 생성\n\n### 3. Patients 테이블 정책 향상\n- Admin/Manager: 전체 접근 권한\n- BD: 본인이 생성한 환자만 생성 및 관리\n- CS: 할당된 환자만 관리 (제한된 필드 접근)\n- 정책 수준에서 주민번호 암호화 보호\n\n### 4. Medical Records 정책 향상\n- 환자 관계를 통한 접근 제어\n- 24시간 시간 제한 편집\n- Admin 우선 권한 기능\n\n### 5. Survey/Appointment 정책 향상\n- BD 전용 토큰 생성\n- 익명 토큰 검증\n- CS 예약 관리\n- 자동 상태 이력 추적\n\n### 6. 감사 시스템 구축\n- RLS가 적용된 audit_logs 테이블\n- 민감한 작업 자동 로깅\n- Admin 전용 감사 추적 접근\n\n### 7. 테스트 인프라 구축\n- `validate_rls_policies()` 함수\n- `test_user_access()` 함수\n- 포괄적인 테스트 스위트 (supabase/tests/test_rls_policies.sql)\n- 모든 역할 및 교차 역할 보안 테스트\n\n### 8. 문서화\n- RLS 권한 매트릭스 (docs/RLS_PERMISSION_MATRIX.md)\n- 구현 가이드 (docs/RLS_IMPLEMENTATION_GUIDE.md)\n- 완전한 테스트 절차\n\n**마이그레이션 파일**: `supabase/migrations/20250718124654_enhance_rls_policies_and_permissions.sql`\n\n모든 테이블이 이제 역할 기반 접근 제어를 포함한 포괄적인 RLS 보호를 갖추게 되었습니다.\n</info added on 2025-07-18T12:53:05.099Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "인덱스 생성 및 클라이언트 초기화 코드 작성",
+            "description": "성능 최적화를 위한 인덱스 생성과 Next.js 앱에서 사용할 Supabase 클라이언트 초기화 코드 구현",
+            "dependencies": [
+              5
+            ],
+            "details": "1. 성능 인덱스 생성:\n   - patients(created_at, cs_manager)\n   - appointments(scheduled_at, status)\n   - survey_tokens(expires_at) WHERE used_at IS NULL\n2. Supabase 클라이언트 초기화:\n   - lib/supabase/client.ts (브라우저용)\n   - lib/supabase/server.ts (서버용)\n   - lib/supabase/middleware.ts (미들웨어용)\n3. 타입 자동 생성 설정 (supabase gen types)\n4. 데이터베이스 헬퍼 함수 작성\n5. 연결 테스트 및 타입 검증\n<info added on 2025-07-18T13:03:44.564Z>\n구현 완료 내역:\n\n1. 데이터베이스 인덱스 최적화 완료:\n   - 종합 인덱스 마이그레이션 파일 생성 (20250718125529_optimize_database_indexes.sql)\n   - 일반 쿼리 패턴용 복합 인덱스 추가\n   - 필터링 쿼리용 부분 인덱스 생성 (활성 예약, 만료 예정 토큰)\n   - 함수 기반 인덱스 구현 (대소문자 구분 없는 검색, 날짜만 추출)\n   - JSONB 필드용 GIN 인덱스 구현\n   - 시계열 데이터용 BRIN 인덱스 추가\n   - 모니터링 함수 생성: get_index_usage_stats(), find_unused_indexes()\n\n2. 향상된 Supabase 클라이언트 설정 완료:\n   - TypeScript 타입과 싱글톤 패턴을 적용한 브라우저 클라이언트 업데이트\n   - 다양한 클라이언트 타입을 포함한 종합적인 서버사이드 유틸리티 생성\n   - 역할 기반 헬퍼 함수 구현 (hasRole, requireRole)\n   - 인증 유틸리티 추가 (getUser, getUserProfile)\n\n3. 미들웨어 구현 완료:\n   - 라우트 보호 기능을 갖춘 인증 미들웨어 생성\n   - 라우트에 대한 역할 기반 접근 제어 구현\n   - 자동 세션 갱신 처리\n   - 퍼블릭 라우트 설정\n\n4. TypeScript 통합 완료:\n   - 전체 스키마 타이핑을 포함한 database.types.ts 생성\n   - 타입 안전 클라이언트 초기화\n   - 강타입 헬퍼 함수\n\n5. 데이터베이스 헬퍼 함수 완료:\n   - 환자 관리 (주민번호 포함 생성, 검색, 역할별 조회)\n   - 예약 헬퍼 (다가오는 예약, 날짜 범위)\n   - 설문 토큰 관리\n   - 역할별 대시보드 통계\n   - 에러 처리 유틸리티\n\n6. 연결 테스트 완료:\n   - 클라이언트 및 서버 연결 테스트\n   - 종합 진단 함수\n   - 헬스 체크 엔드포인트 데이터\n   - 인증, 데이터베이스, RLS, 함수 테스트\n\n7. 문서화 완료:\n   - 완전한 클라이언트 사용 가이드 (docs/SUPABASE_CLIENT_USAGE.md)\n   - 모든 클라이언트 타입에 대한 예제\n   - 모범 사례 및 일반 패턴\n   - 문제 해결 가이드\n\n생성/수정된 파일:\n- supabase/migrations/20250718125529_optimize_database_indexes.sql\n- src/lib/supabase/client.ts (향상됨)\n- src/lib/supabase/server.ts\n- src/lib/supabase/middleware.ts\n- src/middleware.ts\n- src/lib/supabase/helpers.ts\n- src/lib/supabase/test-connection.ts\n- src/types/database.types.ts\n- docs/SUPABASE_CLIENT_USAGE.md\n\n최적화된 데이터베이스와 타입 안전 클라이언트 설정으로 애플리케이션 개발 준비 완료.\n</info added on 2025-07-18T13:03:44.564Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Supabase Auth 기반 인증 시스템 및 RBAC 구현",
+        "description": "이메일/패스워드 인증, 세션 관리, 역할 기반 접근 제어(RBAC) 미들웨어, 로그인/로그아웃 페이지 구현",
+        "details": "1. Supabase Auth 설정:\n   - 이메일/패스워드 인증 활성화\n   - 세션 만료 시간 설정 (8시간)\n   - 비밀번호 정책 설정\n2. NextJS 미들웨어 구현 (middleware.ts):\n   ```typescript\n   export async function middleware(request: NextRequest) {\n     const supabase = createMiddlewareClient({ req: request });\n     const { data: { session } } = await supabase.auth.getSession();\n     \n     if (!session && !request.nextUrl.pathname.startsWith('/login')) {\n       return NextResponse.redirect(new URL('/login', request.url));\n     }\n     \n     // 역할별 라우트 접근 제어\n     const userRole = session?.user?.role;\n     if (request.nextUrl.pathname.startsWith('/admin') && userRole !== 'admin') {\n       return NextResponse.redirect(new URL('/unauthorized', request.url));\n     }\n   }\n   ```\n3. 인증 관련 서버 액션 구현:\n   - signIn, signOut, getSession\n   - getUserProfile (역할 정보 포함)\n4. 로그인/로그아웃 페이지 UI (shadcn/ui 컴포넌트)\n5. useAuth 커스텀 훅 구현\n6. 보호된 라우트 HOC 구현",
+        "testStrategy": "1. 로그인/로그아웃 플로우 E2E 테스트\n2. 세션 만료 및 갱신 테스트\n3. 역할별 라우트 접근 권한 테스트\n4. 비인증 사용자 리다이렉트 테스트\n5. 동시 로그인 세션 관리 테스트",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Supabase Auth 초기 설정 및 인증 정책 구성",
+            "description": "Supabase 대시보드에서 Auth 설정을 구성하고, 이메일/패스워드 인증 활성화, 세션 정책 설정, 비밀번호 정책 구성",
+            "dependencies": [],
+            "details": "1. Supabase 대시보드에서 Auth 설정 페이지 접속\n2. 이메일/패스워드 인증 활성화\n3. 세션 만료 시간 8시간으로 설정\n4. 비밀번호 정책 구성 (최소 8자, 대소문자/숫자/특수문자 포함)\n5. 이메일 템플릿 커스터마이징 (비밀번호 재설정, 환영 이메일)\n6. Supabase Auth 환경 변수 확인 및 .env 파일 업데이트\n<info added on 2025-07-18T13:15:44.509Z>\n완료된 Supabase Auth 종합 설정 사항:\n1) 대시보드 설정을 위한 상세 인증 구성 가이드 작성 - auth 프로바이더, 이메일 템플릿, URL 구성, 보안 정책 포함\n2) 모든 인증 관련 이메일 템플릿 구현 완료 (회원가입, 비밀번호 재설정, 이메일 변경) - 전문적인 스타일링과 브랜딩 적용\n3) 구성 가능한 요구사항을 갖춘 비밀번호 검증 유틸리티 개발 (길이, 대문자, 소문자, 숫자, 특수문자)\n4) 회원가입, 로그인, 로그아웃, 비밀번호 재설정, 세션 관리를 위한 auth 헬퍼 함수 개발\n5) React 통합을 위한 auth context provider와 hooks 설정\n6) 모든 인증 플로우에 에러 처리 및 사용자 피드백 메커니즘 추가\n참고: supabase/auth-config-guide.md의 상세 가이드에 따라 수동 대시보드 구성이 여전히 필요함\n</info added on 2025-07-18T13:15:44.509Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "NextJS 미들웨어 구현 및 라우트 보호 설정",
+            "description": "middleware.ts 파일을 생성하여 세션 검증, 인증 리다이렉트, 역할별 접근 제어 로직 구현",
+            "dependencies": [],
+            "details": "1. src/middleware.ts 파일 생성\n2. createMiddlewareClient로 Supabase 클라이언트 초기화\n3. getSession()으로 현재 세션 확인\n4. 미인증 사용자 /login으로 리다이렉트\n5. 역할별 라우트 접근 권한 매핑 (admin: /admin/*, manager: /manager/* 등)\n6. matcher 패턴으로 보호할 라우트 정의\n7. 세션 갱신 로직 추가\n<info added on 2025-07-18T18:33:40.878Z>\n분석 완료 내용을 바탕으로 다음 작업 필요:\n\n**기존 구현 확인됨:**\n- middleware.ts는 updateSession만 호출하는 기본 구조\n- lib/supabase/middleware.ts에 실제 인증/권한 로직 구현됨\n- createServerClient로 Supabase 클라이언트 생성\n- getUser()로 사용자 세션 확인\n- protectedRoutes 배열로 보호 대상 라우트 정의\n- 역할별 접근 제어 로직 구현\n- 미인증 시 /login 리다이렉트\n- 권한 없음 시 /unauthorized 리다이렉트\n\n**추가 구현 필요 사항:**\n1. /unauthorized 페이지 생성 필요\n2. 라우트 매칭 패턴 개선 (현재는 startsWith만 사용)\n3. 세션 갱신 로직 강화 (현재는 기본 updateSession만 사용)\n4. 로깅 및 에러 처리 추가 (현재는 console.error만 사용)\n\n**개선 제안:**\n- 정규식 기반 라우트 매칭으로 더 세밀한 제어\n- 세션 만료 시간 체크 및 자동 갱신 로직\n- 접근 시도 로깅 (감사 추적용)\n- 에러 발생 시 사용자 친화적 처리\n</info added on 2025-07-18T18:33:40.878Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "서버 액션으로 인증 함수 구현",
+            "description": "app/actions/auth.ts에 signIn, signOut, getSession, updatePassword 등 서버 액션 함수 구현",
+            "dependencies": [],
+            "details": "1. app/actions/auth.ts 파일 생성\n2. 'use server' 지시문 추가\n3. signIn 함수: 이메일/패스워드 검증, 로그인 처리\n4. signOut 함수: 세션 종료 처리\n5. getSession 함수: 현재 세션 정보 반환\n6. getCurrentUser 함수: profiles 테이블 조인하여 역할 정보 포함\n7. updatePassword 함수: 비밀번호 변경\n8. 에러 핸들링 및 타입 안전성 보장\n<info added on 2025-07-18T18:48:46.875Z>\n서버 액션 구현 계획:\n\n1. 디렉토리 구조 분석 완료:\n   - 현재 서버 액션 파일 없음 (app/actions 디렉토리 생성 필요)\n   - 기존 auth 헬퍼 함수들은 클라이언트 사이드 위주로 구현됨\n   - Supabase 서버 클라이언트 생성 함수들은 이미 구현됨\n\n2. 구현할 서버 액션 함수들:\n   - signIn: 이메일/패스워드 로그인 (서버 사이드)\n   - signOut: 로그아웃 처리\n   - getSession: 현재 세션 정보 조회\n   - getCurrentUser: 프로필 정보 포함한 사용자 정보 조회\n   - updatePassword: 비밀번호 변경\n   - resetPasswordRequest: 비밀번호 재설정 요청\n   - verifyEmail: 이메일 인증 처리\n\n3. 구현 방향:\n   - Next.js App Router의 서버 액션 패턴 사용\n   - 'use server' 지시문으로 서버 전용 함수 표시\n   - createActionClient() 사용하여 쿠키 기반 인증 처리\n   - 타입 안전성을 위한 Zod 스키마 검증\n   - 에러 처리 및 한국어 메시지 반환\n\n4. 주요 고려사항:\n   - 서버 액션은 POST 요청으로만 호출 가능\n   - FormData 또는 일반 객체 파라미터 지원\n   - 반환값은 직렬화 가능해야 함\n   - 프로필 테이블과 조인하여 역할 정보 포함\n</info added on 2025-07-18T18:48:46.875Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "로그인/로그아웃 페이지 UI 구현",
+            "description": "shadcn/ui 컴포넌트를 활용하여 로그인 페이지, 로그아웃 확인 다이얼로그, 비밀번호 재설정 폼 구현",
+            "dependencies": [
+              3
+            ],
+            "details": "1. app/login/page.tsx 생성\n2. shadcn/ui Form, Input, Button 컴포넌트 활용\n3. react-hook-form + zod 스키마 검증\n4. 로그인 폼: 이메일, 패스워드 입력\n5. 로딩 상태 및 에러 메시지 표시\n6. 비밀번호 재설정 링크 추가\n7. 로그아웃 확인 다이얼로그 컴포넌트\n8. 모바일 반응형 디자인 적용\n<info added on 2025-07-18T18:57:43.816Z>\nTask 3.4 분석 완료. 구현 계획:\n\n## 현재 상태 분석:\n1. shadcn/ui가 아직 설치되지 않음 - 설치 필요\n2. 기존 auth actions와 types는 잘 구현되어 있음 (signIn, signOut, resetPasswordRequest 등)\n3. PasswordStrengthIndicator 컴포넌트는 이미 존재하며 Tailwind CSS로 스타일링됨\n4. react-hook-form과 zod는 이미 설치되어 있음\n5. Tailwind CSS 설정 파일이 없음 - 생성 필요\n\n## 구현 단계:\n1. Tailwind CSS 설정 파일 생성 (tailwind.config.ts)\n2. shadcn/ui 초기화 및 필요한 컴포넌트 설치\n   - Button, Input, Form, Label, Card, Dialog, AlertDialog 컴포넌트\n3. 로그인 페이지 구현 (app/login/page.tsx)\n   - react-hook-form + zod 스키마 활용\n   - 로딩 상태 및 에러 처리\n   - 비밀번호 재설정 링크\n4. 로그아웃 확인 다이얼로그 컴포넌트 구현\n5. 비밀번호 재설정 페이지 구현 (app/reset-password/page.tsx)\n6. 모바일 반응형 디자인 적용\n\n## 주요 고려사항:\n- 기존 auth actions 재사용\n- 한국어 에러 메시지 처리 (이미 구현됨)\n- 다크모드 지원 (globals.css에 이미 설정됨)\n- 접근성 고려 (ARIA labels, keyboard navigation)\n</info added on 2025-07-18T18:57:43.816Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "useAuth 훅 및 보호된 라우트 HOC 구현",
+            "description": "클라이언트 컴포넌트에서 사용할 useAuth 커스텀 훅과 ProtectedRoute HOC 컴포넌트 구현",
+            "dependencies": [
+              3
+            ],
+            "details": "1. hooks/useAuth.ts 생성\n2. useAuth 훅: user, session, signIn, signOut 메서드 제공\n3. Supabase onAuthStateChange 리스너 설정\n4. 세션 자동 갱신 처리\n5. components/ProtectedRoute.tsx HOC 생성\n6. 역할 기반 접근 제어 로직\n7. 로딩 상태 처리 (스켈레톤 UI)\n8. 권한 없음 페이지 리다이렉트\n<info added on 2025-07-18T19:09:19.820Z>\n구현 계획:\n1. useAuth 훅 개선\n   - 현재 구현은 이미 잘 되어 있음\n   - signIn 메서드 추가 (서버 액션 활용)\n   - 역할(role) 정보 추가\n\n2. ProtectedRoute HOC 구현\n   - 인증 상태 확인\n   - 역할 기반 접근 제어\n   - 로딩 상태 처리 (스켈레톤 UI)\n   - 권한 없음 페이지 리다이렉트\n\n3. 데이터베이스 타입 정의\n   - user_role enum 타입 정의 (admin, manager, bd, cs)\n   - database.types.ts 파일 작성\n\n4. 테스트 컴포넌트 작성\n   - 보호된 라우트 사용 예시\n   - 역할별 접근 제어 데모\n</info added on 2025-07-18T19:09:19.820Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "비밀번호 재설정 이메일 요청 페이지 구현",
+            "description": "사용자가 비밀번호를 잊어버렸을 때 이메일로 재설정 링크를 받을 수 있는 페이지 구현 (/reset-password)",
+            "dependencies": [
+              4
+            ],
+            "details": "1. /app/reset-password/page.tsx 생성\n2. 이메일 입력 폼 구현 (shadcn/ui 컴포넌트 활용)\n3. resetPasswordRequest 서버 액션 호출\n4. 성공 시 이메일 발송 안내 메시지 표시\n5. 로딩 상태 및 에러 처리\n6. 로그인 페이지로 돌아가기 링크",
+            "status": "done",
+            "testStrategy": "1. 유효한 이메일 입력 테스트\n2. 잘못된 이메일 형식 검증 테스트\n3. 이메일 발송 성공/실패 처리 테스트\n4. UI/UX 테스트"
+          },
+          {
+            "id": 7,
+            "title": "비밀번호 재설정 토큰 검증 및 새 비밀번호 설정 페이지 구현",
+            "description": "이메일로 받은 재설정 링크를 통해 접속하는 페이지로, 토큰을 검증하고 새 비밀번호를 설정하는 기능 구현 (/auth/reset-password)",
+            "dependencies": [
+              6
+            ],
+            "details": "1. /app/auth/reset-password/page.tsx 생성\n2. URL 파라미터에서 토큰 추출 및 검증\n3. 새 비밀번호와 확인 입력 폼 구현\n4. 비밀번호 강도 표시 컴포넌트 통합\n5. updatePasswordWithToken 서버 액션 구현 및 호출\n6. 성공 시 로그인 페이지로 리다이렉트\n7. 토큰 만료 또는 무효 시 에러 처리",
+            "status": "done",
+            "testStrategy": "1. 유효한 토큰으로 접근 테스트\n2. 만료된 토큰 처리 테스트\n3. 비밀번호 정책 준수 테스트\n4. 비밀번호 불일치 검증 테스트"
+          },
+          {
+            "id": 8,
+            "title": "비밀번호 강도 표시 컴포넌트 및 서버 액션 구현",
+            "description": "비밀번호 입력 시 실시간으로 강도를 표시하는 컴포넌트와 updatePasswordWithToken 서버 액션 구현",
+            "dependencies": [
+              7
+            ],
+            "details": "1. /components/auth/password-strength.tsx 컴포넌트 생성\n2. 비밀번호 강도 계산 로직 (대소문자, 숫자, 특수문자, 길이)\n3. 시각적 강도 표시 (색상 바, 텍스트)\n4. updatePasswordWithToken 서버 액션 추가\n5. Supabase auth.updateUser() 활용\n6. 토큰 검증 및 비밀번호 업데이트\n7. 감사 로그 기록",
+            "status": "done",
+            "testStrategy": "1. 다양한 비밀번호 패턴 강도 계산 테스트\n2. 서버 액션 토큰 검증 테스트\n3. 비밀번호 업데이트 성공/실패 테스트\n4. 감사 로그 기록 확인"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "shadcn/ui 기반 디자인 시스템 및 레이아웃 구축",
+        "description": "shadcn/ui 컴포넌트 설정, 테마 시스템, 반응형 레이아웃, 네비게이션 구조 및 공통 컴포넌트 구현",
+        "details": "1. shadcn/ui 초기 설정:\n   ```bash\n   npx shadcn-ui@latest init\n   npx shadcn-ui@latest add button card dialog form input label select table tabs toast\n   ```\n2. 테마 설정 (globals.css):\n   - 병원 브랜드 컬러 팔레트\n   - 다크 모드 지원\n   - 폰트 시스템 (Pretendard)\n3. 레이아웃 컴포넌트 구현:\n   - RootLayout: 전체 앱 래퍼\n   - DashboardLayout: 사이드바 + 헤더 + 콘텐츠\n   - MobileLayout: 모바일 최적화 레이아웃\n4. 네비게이션 구조:\n   - 역할별 동적 메뉴 생성\n   - 활성 상태 표시\n   - 모바일 햄버거 메뉴\n5. 공통 컴포넌트:\n   - PageHeader, DataTable, SearchInput\n   - StatusBadge, LoadingSpinner, ErrorBoundary\n6. 접근성 최적화 (ARIA labels, 키보드 네비게이션)",
+        "testStrategy": "1. 모든 브레이크포인트 반응형 테스트\n2. 컴포넌트 스토리북 테스트\n3. 다크 모드 전환 테스트\n4. 키보드 접근성 테스트\n5. 스크린 리더 호환성 테스트",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "shadcn/ui 초기 설정 및 필수 컴포넌트 설치",
+            "description": "Next.js 프로젝트에 shadcn/ui를 초기화하고, 병원 PMS에 필요한 핵심 UI 컴포넌트들(button, card, dialog, form, input, label, select, table, tabs, toast 등)을 설치 및 설정합니다. Tailwind CSS 설정과 기본 테마 구성을 포함합니다.",
+            "details": "<info added on 2025-07-18T19:36:02.884Z>\n병원 PMS 프로젝트의 shadcn/ui 초기 설정을 성공적으로 완료했습니다. \n\n구체적인 설정 내용:\n- Tailwind CSS v3 및 tailwindcss-animate 설치 완료\n- shadcn/ui를 New York 스타일과 Neutral 색상 스키마로 초기화\n- 필수 UI 컴포넌트 설치: button, card, dialog, input, label, select, table, tabs, toast, badge, checkbox, dropdown-menu, separator, avatar, sheet, scroll-area\n- globals.css에 CSS 변수 설정 완료\n- components.json 구성 파일 설정\n- 루트 레이아웃에 Toaster 컴포넌트 추가\n- 테마 구성 파일 생성 완료\n\n모든 컴포넌트가 애플리케이션에서 사용 가능한 상태로 준비되었습니다.\n</info added on 2025-07-18T19:36:02.884Z>",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 2,
+            "title": "병원 테마 시스템 및 다크 모드 구현",
+            "description": "병원 브랜드 아이덴티티를 반영한 커스텀 테마 시스템을 구축합니다. 색상 팔레트, 타이포그래피(Pretendard 폰트), 다크 모드 지원, CSS 변수 설정 등을 포함합니다.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 3,
+            "title": "반응형 레이아웃 컴포넌트 구현",
+            "description": "RootLayout(전체 앱 래퍼), DashboardLayout(사이드바 + 헤더 + 콘텐츠), MobileLayout(모바일 최적화) 등 핵심 레이아웃 컴포넌트를 구현합니다. 모든 브레이크포인트에서 완벽한 반응형 디자인을 보장합니다.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 4
+          },
+          {
+            "id": 4,
+            "title": "공통 UI 컴포넌트 및 네비게이션 구축",
+            "description": "PageHeader, DataTable, SearchInput, StatusBadge, LoadingSpinner, ErrorBoundary 등 재사용 가능한 공통 컴포넌트를 구현합니다. 역할별 동적 메뉴 생성, 활성 상태 표시, 모바일 햄버거 메뉴를 포함한 네비게이션 시스템을 구축하고, ARIA labels와 키보드 네비게이션을 통한 접근성을 최적화합니다.",
+            "details": "",
+            "status": "done",
+            "dependencies": [],
+            "parentTaskId": 4
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "환자 설문 시스템 구현 (토큰 생성, 4단계 폼, 자동 환자 생성)",
+        "description": "24시간 유효 설문 토큰 생성, 모바일 최적화 4단계 설문 폼, 설문 응답 처리 및 환자 레코드 자동 생성 트랜잭션",
+        "details": "1. 설문 토큰 생성 API:\n   ```typescript\n   // app/api/survey/token/route.ts\n   export async function POST(request: Request) {\n     const token = crypto.randomUUID();\n     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);\n     \n     await supabase.from('survey_tokens').insert({\n       token,\n       created_by: userId,\n       expires_at: expiresAt\n     });\n     \n     return Response.json({ \n       url: `${process.env.NEXT_PUBLIC_URL}/survey/${token}` \n     });\n   }\n   ```\n2. 4단계 설문 폼 구현 (react-hook-form + zod):\n   - Step 1: 개인정보 동의 (체크박스 필수)\n   - Step 2: 기본정보 (이름, 전화번호, 주민번호 마스킹 입력, Daum 주소 API)\n   - Step 3: 건강정보 (8개 질환 체크박스, 기본값 \"해당사항 없음\")\n   - Step 4: 희망검사 선택\n3. 진행률 표시 및 자동 저장 기능\n4. 설문 제출 트랜잭션:\n   ```typescript\n   const { data, error } = await supabase.rpc('submit_survey', {\n     survey_data: formData,\n     token: surveyToken\n   });\n   ```\n5. 주민번호 암호화 처리 (AES-256)\n6. 실시간 BD 알림 트리거",
+        "testStrategy": "1. 토큰 생성 및 만료 테스트\n2. 각 단계별 유효성 검증 테스트\n3. 주소 API 연동 테스트\n4. 트랜잭션 롤백 테스트\n5. 모바일 디바이스 테스트",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "설문 토큰 생성 API 및 만료 로직 구현",
+            "description": "24시간 유효 토큰 생성 API 개발, 토큰 검증 미들웨어 구현, 만료된 토큰 자동 정리 스케줄러 설정",
+            "dependencies": [],
+            "details": "1. POST /api/survey/token 엔드포인트 구현\n2. crypto.randomUUID()로 고유 토큰 생성\n3. survey_tokens 테이블에 토큰 정보 저장 (created_by, expires_at)\n4. 토큰 유효성 검증 미들웨어 작성\n5. Vercel Cron Job으로 만료 토큰 일일 정리\n6. 토큰 생성 시 QR코드 생성 옵션 추가",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "4단계 설문 폼 UI 구현 (react-hook-form, zod)",
+            "description": "모바일 최적화 4단계 설문 폼 UI 구현, 각 단계별 유효성 검증 스키마 정의, 진행률 표시 및 이전/다음 네비게이션",
+            "dependencies": [
+              1
+            ],
+            "details": "1. react-hook-form으로 4단계 폼 구조 설계\n2. zod 스키마로 각 단계별 검증 규칙 정의\n3. 단계별 컴포넌트: 기본정보, 연락처, 주소정보, 추가정보\n4. 모바일 터치 최적화 UI (큰 버튼, 적절한 여백)\n5. 진행률 표시 바 및 단계 인디케이터\n6. 폼 데이터 임시 저장 (localStorage)\n<info added on 2025-07-18T23:34:34.105Z>\n구현 완료 사항:\n- SurveyFormMain 컴포넌트: 자동 저장 기능 포함한 메인 설문 폼 컴포넌트\n- 4단계 컴포넌트 구현:\n  * Step1PersonalInfo: 주민번호 마스킹 처리된 개인정보 입력\n  * Step2ContactInfo: 주소 API 연동 준비된 연락처 정보\n  * Step3MedicalHistory: 조건부 필드가 포함된 의료 기록\n  * Step4Confirmation: 동의서가 포함된 최종 확인\n- submitSurvey 서버 액션: 기본 환자 레코드 생성 기능\n- 설문 완료 페이지 구현\n- 한국어 에러 메시지와 함께 모든 폼 검증 작동\n- localStorage를 통한 폼 데이터 자동 저장\n- 주소 API 연동(Task 5.3) 및 주민번호 암호화(Task 5.4) 준비 완료\n</info added on 2025-07-18T23:34:34.105Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "주소 API 연동 및 주민번호 마스킹 입력",
+            "description": "다음 우편번호 API 연동으로 주소 검색 구현, 주민번호 입력 필드 마스킹 처리 및 유효성 검증",
+            "dependencies": [
+              2
+            ],
+            "details": "1. 다음 우편번호 서비스 API 연동\n2. 주소 검색 모달/팝업 구현\n3. 주민번호 입력 컴포넌트 개발 (******-*******)\n4. 주민번호 패턴 검증 (생년월일, 성별 체크)\n5. react-input-mask로 입력 포맷팅\n6. 주민번호 유효성 검증 알고리즘 구현\n<info added on 2025-07-19T01:22:22.874Z>\n완료된 구현 사항:\n1. AddressSearchModal 컴포넌트 생성 - 다음 우편번호 API를 동적으로 로드\n2. SSNInput 컴포넌트 구현 - react-input-mask를 사용한 포맷팅 및 마스킹 처리 (******-******* 표시, 토글로 노출 가능)\n3. 체크섬 알고리즘을 포함한 포괄적인 주민번호 유효성 검증 구현\n4. Step1PersonalInfo를 새로운 주민번호 컴포넌트 사용하도록 업데이트\n5. Step2ContactInfo에 주소 검색 모달 통합\n6. zod refinements를 사용하여 survey 스키마에 적절한 주민번호 검증 추가\n모든 컴포넌트는 적절한 오류 처리와 사용자 피드백으로 완전히 기능하도록 구현됨\n</info added on 2025-07-19T01:22:22.874Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "주민번호 암호화 및 보안 처리",
+            "description": "주민번호 서버측 암호화 구현, 복호화 권한 관리, 암호화 키 로테이션 정책 수립",
+            "dependencies": [
+              3
+            ],
+            "details": "1. Node.js crypto 모듈로 AES-256-GCM 암호화\n2. 환경변수에 암호화 키 저장 (KEY_ROTATION_DAYS=90)\n3. 주민번호 암호화/복호화 유틸리티 함수\n4. 복호화 권한 체크 미들웨어 (admin, manager만)\n5. 암호화된 데이터 DB 저장 (encrypted_ssn 컬럼)\n6. 감사 로그: 복호화 시도 기록\n<info added on 2025-07-19T01:31:26.493Z>\n완료된 종합 주민번호 암호화 구현:\n1) Node.js 서버측 암호화 유틸리티 - AES-256-GCM 알고리즘 구현\n2) 주민번호 암호화/복호화/해싱/마스킹 함수 구현\n3) admin/manager 역할만 복호화 가능한 역할 기반 미들웨어 구축\n4) 속도 제한이 적용된 보안 주민번호 조회 API 엔드포인트 개발\n5) 모든 주민번호 접근 시도에 대한 종합 감사 로깅 추가\n6) 설문 제출시 데이터베이스 암호화 함수 사용하도록 업데이트\n7) 감사 로그 테이블 및 통계 뷰를 위한 데이터베이스 마이그레이션 생성\n8) 암호화 키를 위한 환경 변수 설정 추가\n시스템은 이제 데이터베이스 레벨 암호화, 서버측 검증, 역할 기반 접근 제어, 완전한 감사 추적을 통한 다층 보안을 제공합니다.\n</info added on 2025-07-19T01:31:26.493Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "설문 제출 트랜잭션 및 환자 레코드 생성",
+            "description": "설문 제출 시 트랜잭션으로 환자 레코드 자동 생성, 중복 체크, 롤백 처리 구현",
+            "dependencies": [
+              4
+            ],
+            "details": "1. POST /api/survey/submit 트랜잭션 처리\n2. 주민번호 기반 환자 중복 체크\n3. 트랜잭션: survey_responses + patients 테이블\n4. 에러 시 자동 롤백 처리\n5. 설문 완료 페이지 및 감사 메시지\n6. 토큰 사용 완료 처리 (재사용 방지)\n<info added on 2025-07-19T01:40:02.664Z>\n구현 완료:\n- submit_survey_with_patient 데이터베이스 함수: 전체 트랜잭션을 원자적으로 처리\n- SSN 해시를 사용한 중복 환자 체크로 중복 레코드 방지\n- 구체적인 에러 코드와 실패 시 롤백을 포함한 에러 처리\n- 환자 상태에 따른 동적 콘텐츠가 포함된 향상된 설문 완료 페이지\n- 모든 설문 제출에 대한 감사 로깅 구현\n- 적절한 에러 매핑과 함께 트랜잭션 함수를 사용하도록 설문 액션 업데이트\n- 중복 환자 체크를 위한 API 엔드포인트 추가\n- 참조 번호와 다음 단계가 포함된 완료 페이지 향상\n시스템은 이제 실패 시 자동 롤백으로 데이터 일관성을 보장하고 중복 환자 레코드를 방지함\n</info added on 2025-07-19T01:40:02.664Z>",
+            "status": "done",
+            "testStrategy": ""
+          },
+          {
+            "id": 6,
+            "title": "실시간 BD 알림 및 진행률 자동 저장",
+            "description": "BD 담당자 실시간 설문 응답 알림, 설문 진행률 자동 저장 및 복구 기능 구현",
+            "dependencies": [
+              5
+            ],
+            "details": "1. Supabase Realtime으로 설문 제출 알림\n2. BD 대시보드에 실시간 알림 토스트\n3. 각 단계 완료 시 진행률 자동 저장\n4. 브라우저 새로고침 시 진행 상태 복구\n5. 설문 미완료 시 리마인더 이메일/SMS\n6. BD별 설문 응답률 통계 위젯\n<info added on 2025-07-19T01:47:20.238Z>\n구현 완료 내역:\n1. useRealtimeNotifications 훅 생성 - Supabase Realtime 채널로 신규 설문 및 진행률 업데이트 실시간 수신\n2. RealtimeNotificationProvider로 BD 대시보드 전역 알림 컨텍스트 제공\n3. SurveyResponseStats 위젯 구현 - 실시간 응답률, 완료율, 추세 차트 표시\n4. useSurveyProgress 훅으로 설문 진행 상태 자동 저장 기능 구현\n5. localStorage 및 데이터베이스 백업을 통한 브라우저 새로고침 시 진행 상태 복구\n6. 이메일/SMS 리마인더 시스템 구축 - 미완료 설문 자동 알림 발송\n7. 매일 오전 10시 실행되는 리마인더 처리 cron job 설정\n8. realtime_notifications, survey_reminders 테이블 및 트리거 마이그레이션 완료\n\n시스템은 이제 BD 사용자에게 설문 제출 시 즉시 알림을 전달하고, 실시간으로 응답률을 추적하며, 설문 진행 상태를 자동으로 저장 및 복구합니다.\n</info added on 2025-07-19T01:47:20.238Z>",
+            "status": "done",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "환자 관리 시스템 구현 (CRUD, 상태 관리, 의료정보)",
+        "description": "환자 목록 조회, 상세 정보 페이지, 상태 워크플로우, 의료정보 등록 및 질환 플래그 자동 매핑",
+        "details": "1. 환자 목록 페이지:\n   - TanStack Table 기반 데이터 테이블\n   - 서버 사이드 페이지네이션\n   - 다중 필터 (상태, 담당자, 기간)\n   - 빠른 검색 기능\n2. 환자 상세 페이지 (탭 구조):\n   ```typescript\n   // app/patients/[id]/page.tsx\n   const tabs = [\n     { id: 'overview', label: '개요', component: PatientOverview },\n     { id: 'medical', label: '의료정보', component: MedicalInfo },\n     { id: 'consultations', label: '상담이력', component: ConsultationHistory },\n     { id: 'appointments', label: '예약정보', component: AppointmentInfo }\n   ];\n   ```\n3. 상태 관리 워크플로우:\n   - 상태 전환 규칙 정의\n   - 상태 변경 시 감사 로그\n   - 역할별 상태 변경 권한\n4. 의료정보 폼:\n   - 과거력/가족력 텍스트 입력\n   - 복약정보 동적 추가/삭제\n   - 수술이력 날짜 포함\n   - 알러지 정보 태그 입력\n5. 질환 플래그 자동 매핑:\n   ```typescript\n   const diseaseKeywords = {\n     diabetes: ['당뇨', '혈당', 'DM'],\n     hypertension: ['고혈압', '혈압', 'HTN'],\n     // ...\n   };\n   ```",
+        "testStrategy": "1. 대용량 데이터 페이지네이션 성능 테스트\n2. 상태 전환 비즈니스 로직 테스트\n3. 의료정보 저장 및 조회 테스트\n4. 질환 키워드 매칭 정확도 테스트\n5. 동시 편집 충돌 방지 테스트",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "환자 목록 페이지 구현 (TanStack Table 기반)",
+            "description": "TanStack Table을 활용한 환자 목록 테이블 구현, 서버 사이드 페이지네이션, 다중 필터링(상태/담당자/기간), 빠른 검색 기능 구현",
+            "dependencies": [],
+            "details": "1. TanStack Table v8 설정 및 커스텀 훅 구현\n2. Supabase 페이지네이션 쿼리 작성 (LIMIT/OFFSET)\n3. 필터 컴포넌트 구현 (상태 드롭다운, 담당자 선택, 날짜 범위)\n4. 디바운싱된 검색 입력 필드 구현\n5. 정렬 기능 및 컬럼 가시성 토글 구현\n6. 로딩 상태 및 스켈레톤 UI 추가",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "환자 상세 페이지 탭 구조 구현",
+            "description": "환자 상세 정보를 위한 탭 기반 레이아웃 구현, 개요/의료정보/상담이력/예약정보 탭 컴포넌트 개발",
+            "dependencies": [
+              1
+            ],
+            "details": "1. app/patients/[id]/page.tsx 라우트 생성\n2. 탭 네비게이션 컴포넌트 구현 (URL 쿼리 파라미터 연동)\n3. PatientOverview 컴포넌트 (기본 정보, 상태, 담당자)\n4. ConsultationHistory 컴포넌트 (상담 이력 타임라인)\n5. AppointmentInfo 컴포넌트 (예약 캘린더 뷰)\n6. 탭 전환 시 데이터 프리페칭 구현",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "상태 관리 워크플로우 및 역할별 권한 구현",
+            "description": "환자 상태 전환 비즈니스 로직 구현, 역할별 액션 권한 제어, 상태 변경 이력 추적",
+            "dependencies": [
+              2
+            ],
+            "details": "1. 상태 전환 규칙 정의 (State Machine 패턴)\n2. Zustand 스토어로 상태 관리 로직 구현\n3. 역할별 권한 체크 HOC/훅 구현\n4. 상태 변경 API 엔드포인트 구현\n5. 상태 변경 시 알림 및 담당자 자동 할당\n6. 상태 이력 테이블 및 UI 구현",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "의료정보 폼 구현 (동적 필드, 질환 플래그 자동 매핑)",
+            "description": "React Hook Form 기반 의료정보 입력 폼, 동적 필드 추가/삭제, 질환 키워드 자동 감지 및 플래그 매핑",
+            "dependencies": [
+              2
+            ],
+            "details": "1. React Hook Form + Zod 스키마 검증 설정\n2. 동적 필드 배열 관리 (useFieldArray)\n3. 검사 항목 마스터 데이터 연동\n4. 질환 키워드 매칭 알고리즘 구현\n5. 자동 완성 및 추천 기능 구현\n6. 파일 업로드 (검사 결과지) 기능 추가",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "감사 로그 및 동시 편집 방지 기능 구현",
+            "description": "모든 CRUD 작업에 대한 감사 로그 기록, 낙관적 잠금을 통한 동시 편집 충돌 방지, 변경 이력 뷰어 구현",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "1. PostgreSQL 트리거로 감사 로그 자동 기록\n2. 낙관적 잠금 구현 (version 컬럼 활용)\n3. 동시 편집 감지 및 충돌 해결 UI\n4. 감사 로그 조회 페이지 구현\n5. 변경 사항 diff 뷰어 구현\n6. 복원 기능 구현 (이전 버전으로 롤백)",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "예약 관리 시스템 및 캘린더 뷰 구현",
+        "description": "예약 CRUD, 시간 충돌 검사, 캘린더/리스트 뷰, 예약 변경 이력 추적 및 리마인더 기능",
+        "details": "1. 예약 생성 모달:\n   - 환자 선택 (검색 자동완성)\n   - 검사 항목 선택\n   - 날짜/시간 선택 (영업시간만 표시)\n   - 예약 가능 여부 실시간 확인\n2. 시간 충돌 검사:\n   ```typescript\n   async function checkAvailability(datetime: Date, duration: number) {\n     const { data: conflicts } = await supabase\n       .from('appointments')\n       .select('*')\n       .gte('start_time', datetime)\n       .lt('start_time', addMinutes(datetime, duration));\n     return conflicts.length === 0;\n   }\n   ```\n3. 캘린더 뷰 구현 (FullCalendar 또는 자체 구현):\n   - 월/주/일 뷰 전환\n   - 드래그 앤 드롭 일정 변경\n   - 검사 종류별 색상 구분\n4. 예약 변경/취소:\n   - 변경 사유 필수 입력\n   - 이력 자동 기록\n   - 환자 알림 발송\n5. 리마인더 시스템:\n   - 예약 1일 전 자동 알림\n   - No-show 방지 확인 전화 기록",
+        "testStrategy": "1. 동시 예약 충돌 방지 테스트\n2. 캘린더 성능 테스트 (100+ 예약)\n3. 예약 변경 트랜잭션 테스트\n4. 시간대 변환 정확성 테스트\n5. 리마인더 발송 스케줄러 테스트",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "예약 생성 모달 구현 및 시간 충돌 검사 로직 개발",
+            "description": "환자 선택, 검사 항목 선택, 날짜/시간 선택 기능이 포함된 예약 생성 모달을 구현하고, 실시간 시간 충돌 검사 로직을 개발합니다.",
+            "dependencies": [],
+            "details": "React Hook Form과 Zod를 사용한 폼 유효성 검사, Supabase RPC 함수로 시간 충돌 검사 구현, 환자 검색 자동완성 (debounce 적용), 영업시간만 선택 가능하도록 제한, 검사 항목별 소요 시간 자동 계산",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "캘린더 뷰 구현 (월/주/일 뷰, 드래그앤드롭)",
+            "description": "FullCalendar 라이브러리를 활용하여 월별, 주별, 일별 뷰를 구현하고 예약 드래그앤드롭 기능을 추가합니다.",
+            "dependencies": [
+              1
+            ],
+            "details": "FullCalendar React 컴포넌트 통합, 예약 상태별 색상 구분 (대기/확정/완료/취소), 드래그앤드롭 시 시간 충돌 실시간 검증, 터치 디바이스 지원, 예약 상세 정보 툴팁/팝오버 표시",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "예약 변경/취소 기능 및 이력 관리 시스템",
+            "description": "예약 수정, 취소 기능을 구현하고 모든 변경 사항에 대한 감사 이력을 추적하는 시스템을 개발합니다.",
+            "dependencies": [
+              2
+            ],
+            "details": "예약 변경 모달 (시간, 검사 항목 수정), 취소 사유 입력 필수화, appointment_history 테이블에 변경 이력 저장, 변경 사항 타임라인 뷰 구현, 변경 권한 체크 (본인 예약만 수정 가능)",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "리마인더 알림 시스템 및 No-show 방지 기능",
+            "description": "예약 리마인더 자동 발송 시스템을 구축하고 No-show를 방지하기 위한 기능을 구현합니다.",
+            "dependencies": [
+              3
+            ],
+            "details": "Supabase Edge Functions로 리마인더 스케줄러 구현, 예약 24시간/3시간 전 알림 발송, 카카오톡 알림톡 API 연동, No-show 이력 추적 및 경고 시스템, 예약 확인 응답 처리 로직",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "예약 통계 대시보드 및 리포트 생성 기능",
+            "description": "예약 관련 통계를 시각화하고 Excel/PDF 형식의 리포트를 생성하는 기능을 개발합니다.",
+            "dependencies": [
+              4
+            ],
+            "details": "일별/주별/월별 예약 현황 차트 (Chart.js), 검사 항목별 예약 통계, No-show 율 분석, 시간대별 예약 분포도, Excel/PDF 리포트 자동 생성 (예약 목록, 통계 요약)",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "실시간 대시보드 및 통계 시스템 구현",
+        "description": "Supabase Realtime 기반 실시간 대시보드, 역할별 위젯, KPI 통계 및 차트 시각화",
+        "details": "1. Supabase Realtime 구독 설정:\n   ```typescript\n   useEffect(() => {\n     const channel = supabase\n       .channel('dashboard')\n       .on('postgres_changes', {\n         event: '*',\n         schema: 'public',\n         table: 'patients'\n       }, handleRealtimeUpdate)\n       .subscribe();\n   }, []);\n   ```\n2. 역할별 대시보드 위젯:\n   - BD: 최근 설문 응답, 개인 실적\n   - CS: 인계 환자, 예약 현황\n   - Manager: 전사 KPI, 팀별 성과\n3. 통계 집계 쿼리:\n   ```sql\n   CREATE OR REPLACE FUNCTION get_dashboard_stats()\n   RETURNS TABLE (\n     total_patients INTEGER,\n     today_surveys INTEGER,\n     conversion_rate NUMERIC,\n     pending_appointments INTEGER\n   ) AS $$\n   -- 복잡한 집계 쿼리\n   $$ LANGUAGE sql;\n   ```\n4. 차트 구현 (Recharts):\n   - 일별 환자 유입 추이\n   - 상담사별 전환율\n   - 검사 종류별 분포\n5. 실시간 알림 토스트:\n   - 새 설문 응답\n   - 예약 변경/취소\n   - 긴급 사항",
+        "testStrategy": "1. Realtime 연결 안정성 테스트\n2. 동시 다중 사용자 업데이트 테스트\n3. 통계 집계 정확성 검증\n4. 차트 렌더링 성능 테스트\n5. 위젯 자동 갱신 테스트",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "검색, 필터링, 보고서 생성 및 관리자 기능",
+        "description": "고급 검색 기능, Excel/PDF 보고서 생성, 사용자 관리, 시스템 설정 및 마스터 데이터 관리",
+        "details": "1. 고급 검색 구현:\n   - 풀텍스트 검색 (PostgreSQL tsvector)\n   - 다중 조건 필터 빌더\n   - 검색 결과 하이라이팅\n   - 검색 히스토리 저장\n2. 보고서 생성:\n   ```typescript\n   // Excel 생성 (ExcelJS)\n   async function generateExcelReport(data: any[]) {\n     const workbook = new ExcelJS.Workbook();\n     const worksheet = workbook.addWorksheet('환자 리포트');\n     // 스타일링 및 데이터 삽입\n     return workbook.xlsx.writeBuffer();\n   }\n   ```\n3. 사용자 관리 (Admin only):\n   - 계정 생성/수정/비활성화\n   - 역할 변경\n   - 접속 이력 조회\n   - 비밀번호 초기화\n4. 시스템 설정:\n   - 검사 항목 CRUD\n   - 병원 정보 관리\n   - 영업시간 설정\n   - 공휴일 관리\n5. 감사 로그 뷰어:\n   - 시간별 필터링\n   - 사용자별 활동 추적\n   - 민감정보 접근 로그",
+        "testStrategy": "1. 10만 건 데이터 검색 성능 테스트\n2. 대용량 Excel 생성 테스트\n3. 권한 변경 즉시 반영 테스트\n4. 시스템 설정 변경 영향도 테스트\n5. 감사 로그 무결성 테스트",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "고급 검색 및 필터 빌더 구현",
+            "description": "PostgreSQL 풀텍스트 검색과 다중 조건 필터 빌더를 구현하여 환자, 내원 기록, 설문 데이터 등을 효율적으로 검색할 수 있는 시스템 구축",
+            "dependencies": [],
+            "details": "- PostgreSQL tsvector를 활용한 한글 풀텍스트 검색 구현\n- React Hook Form과 Zod를 활용한 동적 필터 빌더 UI 구성\n- 검색 조건 저장 및 재사용 기능\n- 검색 결과 하이라이팅 및 페이지네이션\n- 검색 히스토리 및 자주 사용하는 검색 조건 관리",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Excel/PDF 보고서 생성 시스템 구현",
+            "description": "ExcelJS와 jsPDF를 활용하여 환자 데이터, 통계 정보, 실적 보고서 등을 Excel 및 PDF 형식으로 다운로드할 수 있는 기능 구현",
+            "dependencies": [
+              1
+            ],
+            "details": "- ExcelJS를 사용한 스타일링된 Excel 보고서 생성\n- jsPDF와 html2canvas를 활용한 PDF 보고서 생성\n- 대용량 데이터 스트리밍 처리\n- 보고서 템플릿 관리 시스템\n- 백그라운드 작업 큐를 통한 대용량 보고서 생성",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "사용자 관리 인터페이스 구현",
+            "description": "관리자 전용 사용자 계정 관리 페이지 구현 - 계정 생성, 수정, 비활성화, 역할 및 권한 관리 기능 포함",
+            "dependencies": [],
+            "details": "- Supabase Auth Admin API를 활용한 사용자 CRUD\n- 역할 변경 및 권한 관리 UI\n- 사용자 접속 이력 및 활동 로그 조회\n- 비밀번호 초기화 및 임시 비밀번호 발급\n- 부서별 사용자 그룹 관리",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "시스템 설정 관리 기능 구현",
+            "description": "검사 항목, 병원 영업시간, 공휴일 설정 등 시스템 전반의 마스터 데이터를 관리할 수 있는 관리자 인터페이스 구현",
+            "dependencies": [],
+            "details": "- 검사 항목 CRUD 인터페이스\n- 병원 영업시간 및 휴무일 캘린더 관리\n- 공휴일 자동 연동 및 수동 설정\n- 시스템 전역 설정 (타임아웃, 세션 관리 등)\n- 설정 변경 이력 추적 및 롤백 기능",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "감사 로그 뷰어 및 활동 추적 시스템",
+            "description": "모든 사용자 활동을 추적하고 감사 로그를 조회, 분석할 수 있는 관리자 도구 구현",
+            "dependencies": [
+              3,
+              4
+            ],
+            "details": "- PostgreSQL 트리거를 활용한 자동 로그 기록\n- 상세 활동 로그 조회 인터페이스\n- 로그 필터링 및 고급 검색 기능\n- 이상 활동 감지 및 알림 시스템\n- 로그 아카이빙 및 보관 정책 관리",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "성능 최적화, 보안 강화 및 프로덕션 배포",
+        "description": "코드 최적화, 보안 취약점 제거, 모니터링 설정, CI/CD 파이프라인 구축 및 프로덕션 배포",
+        "details": "1. 성능 최적화:\n   - React Query 캐싱 전략 수립\n   - 이미지 최적화 (next/image, WebP)\n   - 코드 스플리팅 및 동적 임포트\n   - API 응답 압축 (gzip)\n   - 데이터베이스 인덱스 최적화\n2. 보안 강화:\n   ```typescript\n   // next.config.js\n   const securityHeaders = [\n     { key: 'X-Frame-Options', value: 'DENY' },\n     { key: 'X-Content-Type-Options', value: 'nosniff' },\n     { key: 'X-XSS-Protection', value: '1; mode=block' },\n     { key: 'Strict-Transport-Security', value: 'max-age=31536000' }\n   ];\n   ```\n3. 모니터링 설정:\n   - Sentry 에러 트래킹\n   - Vercel Analytics\n   - Custom 메트릭 수집\n   - 알림 설정 (Slack/Email)\n4. CI/CD 파이프라인:\n   - GitHub Actions 워크플로우\n   - 자동 테스트 실행\n   - Preview 배포\n   - Production 배포 승인\n5. 배포 체크리스트:\n   - 환경 변수 확인\n   - 데이터베이스 마이그레이션\n   - 캐시 무효화\n   - 롤백 계획 수립",
+        "testStrategy": "1. Lighthouse 성능 점수 90+ 달성\n2. OWASP Top 10 보안 테스트\n3. 부하 테스트 (200 동시 사용자)\n4. 배포 롤백 시뮬레이션\n5. 모니터링 알림 테스트",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "성능 최적화 구현",
+            "description": "React Query 캐싱 전략, 코드 스플리팅, 이미지 최적화, API 압축 및 데이터베이스 인덱스 최적화",
+            "dependencies": [],
+            "details": "1. React Query 캐싱 전략:\n   - staleTime, cacheTime 최적화\n   - 무한 스크롤 캐싱 구현\n   - Optimistic updates 설정\n2. 코드 스플리팅:\n   - 동적 임포트 적용 (next/dynamic)\n   - 라우트별 번들 분리\n   - 공통 청크 최적화\n3. 이미지 최적화:\n   - next/image 컴포넌트 전면 적용\n   - WebP 포맷 변환\n   - 반응형 이미지 설정\n4. API 최적화:\n   - Gzip 압축 활성화\n   - Response 페이지네이션\n   - GraphQL 쿼리 최적화\n5. DB 인덱스:\n   - 자주 쓰는 쿼리 분석\n   - 복합 인덱스 생성\n   - EXPLAIN ANALYZE 활용",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "보안 강화 구현",
+            "description": "보안 헤더 설정, OWASP Top 10 대응, 취약점 스캔 및 보안 모범 사례 적용",
+            "dependencies": [],
+            "details": "1. 보안 헤더 구성:\n   - CSP (Content Security Policy) 설정\n   - HSTS, X-Frame-Options 등\n   - next.config.js 보안 설정\n2. OWASP Top 10 대응:\n   - SQL Injection 방지 (Parameterized queries)\n   - XSS 방지 (입력값 sanitization)\n   - CSRF 토큰 구현\n   - 세션 보안 강화\n3. 인증/인가 강화:\n   - JWT 만료 시간 최적화\n   - Refresh token rotation\n   - 2FA 구현 준비\n4. 민감 정보 보호:\n   - 환경 변수 암호화\n   - 주민번호 등 PII 암호화\n   - 로그 마스킹\n5. 보안 스캔:\n   - npm audit 자동화\n   - SAST/DAST 도구 적용\n   - Dependabot 설정",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "모니터링 시스템 구축",
+            "description": "Sentry 에러 트래킹, Vercel Analytics, 커스텀 메트릭 수집 및 알림 시스템 구축",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "1. Sentry 설정:\n   - 프로젝트별 DSN 구성\n   - 에러 필터링 규칙\n   - Source map 업로드\n   - 성능 모니터링 활성화\n2. Vercel Analytics:\n   - Web Vitals 추적\n   - 커스텀 이벤트 정의\n   - 목표 전환율 설정\n3. 커스텀 메트릭:\n   - API 응답 시간 측정\n   - DB 쿼리 성능 추적\n   - 비즈니스 메트릭 (가입, 검사 등)\n4. 로깅 시스템:\n   - 구조화된 로그 포맷\n   - 로그 레벨 관리\n   - 로그 집계 및 분석\n5. 알림 설정:\n   - 임계값 기반 알림\n   - Slack/이메일 통합\n   - 에스컬레이션 정책",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "CI/CD 파이프라인 구축",
+            "description": "GitHub Actions 워크플로우 설정, 자동 테스트, 스테이징 배포 및 프로덕션 배포 자동화",
+            "dependencies": [
+              3
+            ],
+            "details": "1. GitHub Actions 워크플로우:\n   - PR 자동 테스트\n   - 타입 체크 및 린트\n   - 단위/통합 테스트 실행\n   - Lighthouse CI 성능 체크\n2. 브랜치 전략:\n   - main (production)\n   - develop (staging)\n   - feature/* (개발)\n   - GitFlow 적용\n3. 자동 배포:\n   - Vercel 프리뷰 배포\n   - 스테이징 자동 배포\n   - 프로덕션 수동 승인\n4. 테스트 자동화:\n   - Jest 단위 테스트\n   - Playwright E2E 테스트\n   - 시각적 회귀 테스트\n5. 배포 전 체크:\n   - 번들 사이즈 분석\n   - 보안 취약점 스캔\n   - DB 마이그레이션 검증",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "프로덕션 배포 및 롤백 계획",
+            "description": "무중단 배포 전략, 롤백 절차, 배포 체크리스트 및 사후 모니터링 계획 수립",
+            "dependencies": [
+              4
+            ],
+            "details": "1. 배포 전 체크리스트:\n   - 환경 변수 확인\n   - DB 백업 수행\n   - 캐시 무효화 계획\n   - 관련팀 공지\n2. 무중단 배포:\n   - Blue-Green 배포\n   - 카나리 배포 (10% → 50% → 100%)\n   - 헬스체크 엔드포인트\n3. 롤백 절차:\n   - 자동 롤백 트리거\n   - DB 롤백 스크립트\n   - 이전 버전 즉시 복구\n   - RCA 문서 템플릿\n4. 배포 후 검증:\n   - 스모크 테스트 스크립트\n   - 핵심 기능 체크리스트\n   - 성능 메트릭 비교\n5. 사후 관리:\n   - 24시간 집중 모니터링\n   - 사용자 피드백 수집\n   - 배포 회고 및 개선점 도출",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "사용자 프로필 및 계정 설정 시스템 구현",
+        "description": "로그인한 사용자를 위한 프로필 관리, 비밀번호 변경, 계정 설정 기능 구현",
+        "details": "1. 대시보드 헤더 개선:\n   - 사용자 아바타 및 드롭다운 메뉴 구현\n   - 프로필, 설정, 로그아웃 메뉴 항목 추가\n   - 역할(role) 표시 배지\n2. 프로필 페이지 (/profile):\n   - 사용자 기본 정보 표시 (이름, 이메일, 부서, 역할)\n   - 프로필 정보 수정 폼 (이름, 부서 변경 가능)\n   - 프로필 사진 업로드 (optional)\n   - 가입일 및 마지막 로그인 정보 표시\n3. 계정 설정 페이지 (/settings):\n   - 탭 구조 (계정, 보안, 알림, 기타)\n   - 보안 탭: 비밀번호 변경 폼 (현재 비밀번호 확인 필수)\n   - 알림 탭: 이메일 알림 설정 (새 환자, 예약 알림 등)\n   - 세션 관리: 활성 세션 목록 및 강제 로그아웃\n4. 비밀번호 변경 기능:\n   - 기존 updatePassword 서버 액션 활용\n   - PasswordInput 컴포넌트 재사용\n   - 비밀번호 강도 표시\n   - 변경 완료 후 재로그인 안내\n5. UI/UX 개선:\n   - 반응형 디자인\n   - 로딩 상태 처리\n   - 성공/실패 피드백\n   - 한국어 지원",
+        "testStrategy": "1. 프로필 수정 기능 테스트\n2. 비밀번호 변경 플로우 테스트\n3. 권한별 접근 제어 테스트\n4. 세션 관리 기능 테스트\n5. 모바일 반응형 테스트",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "대시보드 헤더에 사용자 메뉴 구현",
+            "description": "대시보드 레이아웃 헤더에 사용자 아바타, 이름, 드롭다운 메뉴를 추가하고 프로필/설정/로그아웃 링크 구현",
+            "dependencies": [],
+            "details": "1. DashboardLayout 컴포넌트 수정\n2. 사용자 아바타 컴포넌트 생성\n3. DropdownMenu 컴포넌트 활용\n4. useAuth 훅으로 사용자 정보 표시\n5. 로그아웃 기능 연동",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "프로필 페이지 구현 (/profile)",
+            "description": "사용자 프로필 정보 조회 및 수정 페이지 구현",
+            "dependencies": [
+              1
+            ],
+            "details": "1. app/(protected)/profile/page.tsx 생성\n2. 프로필 정보 표시 카드\n3. 프로필 수정 폼 (이름, 부서)\n4. updateProfile 서버 액션 구현\n5. 성공/실패 처리",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "계정 설정 페이지 구현 (/settings)",
+            "description": "탭 기반 계정 설정 페이지 구현 (보안, 알림 등)",
+            "dependencies": [
+              2
+            ],
+            "details": "1. app/(protected)/settings/page.tsx 생성\n2. Tabs 컴포넌트로 섹션 구분\n3. 보안 탭: 비밀번호 변경 폼\n4. 알림 탭: 알림 설정 토글\n5. 세션 관리 탭: 활성 세션 목록",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "비밀번호 변경 컴포넌트 구현",
+            "description": "로그인한 사용자를 위한 비밀번호 변경 폼 컴포넌트",
+            "dependencies": [
+              3
+            ],
+            "details": "1. ChangePasswordForm 컴포넌트 생성\n2. 현재 비밀번호 확인 필드\n3. 새 비밀번호 및 확인 필드\n4. PasswordInput 컴포넌트 재사용\n5. updatePassword 서버 액션 연동",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "프로필 관련 서버 액션 구현",
+            "description": "프로필 조회/수정, 알림 설정 등을 위한 서버 액션 구현",
+            "dependencies": [
+              4
+            ],
+            "details": "1. updateProfile 액션 구현\n2. updateNotificationSettings 액션 구현\n3. getActiveSessions 액션 구현\n4. revokeSession 액션 구현\n5. 감사 로그 기록",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-17T12:11:52.460Z",
+      "updated": "2025-07-24T13:25:43.227Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

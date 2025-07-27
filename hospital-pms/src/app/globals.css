@@ -1,0 +1,248 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Hospital Theme - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 220 13% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 13%;
+    
+    /* Medical Blue as Primary */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Soft Gray as Secondary */
+    --secondary: 215 20% 65%;
+    --secondary-foreground: 220 13% 13%;
+    
+    /* Muted Colors */
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
+    
+    /* Accent - Healthcare Green */
+    --accent: 142 71% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+    
+    /* UI Elements */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+    --radius: 0.5rem;
+    
+    /* Chart Colors - Medical Theme */
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 199 89% 48%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 0 84% 60%;
+  }
+
+  .dark {
+    /* Hospital Theme - Dark Mode */
+    --background: 220 14% 10%;
+    --foreground: 213 31% 91%;
+    --card: 220 14% 13%;
+    --card-foreground: 213 31% 91%;
+    --popover: 220 14% 13%;
+    --popover-foreground: 213 31% 91%;
+    
+    /* Medical Blue - Adjusted for Dark */
+    --primary: 217 91% 60%;
+    --primary-foreground: 220 14% 10%;
+    
+    /* Soft Gray - Dark Variant */
+    --secondary: 215 20% 25%;
+    --secondary-foreground: 213 31% 91%;
+    
+    /* Muted Colors - Dark */
+    --muted: 215 20% 20%;
+    --muted-foreground: 215 20% 60%;
+    
+    /* Accent - Healthcare Green Dark */
+    --accent: 142 71% 45%;
+    --accent-foreground: 220 14% 10%;
+    
+    /* Status Colors - Dark */
+    --destructive: 0 63% 50%;
+    --destructive-foreground: 213 31% 91%;
+    --success: 142 71% 45%;
+    --success-foreground: 220 14% 10%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 220 14% 10%;
+    --info: 199 89% 48%;
+    --info-foreground: 220 14% 10%;
+    
+    /* UI Elements - Dark */
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 217 91% 60%;
+    
+    /* Chart Colors - Dark Theme */
+    --chart-1: 217 91% 65%;
+    --chart-2: 142 71% 50%;
+    --chart-3: 199 89% 53%;
+    --chart-4: 38 92% 55%;
+    --chart-5: 0 84% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom Hospital Theme Styles */
+@layer components {
+  /* Status Badge Variants */
+  .badge-pending {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400;
+  }
+  
+  .badge-confirmed {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400;
+  }
+  
+  .badge-completed {
+    @apply bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400;
+  }
+  
+  .badge-cancelled {
+    @apply bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400;
+  }
+  
+  .badge-no-show {
+    @apply bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400;
+  }
+  
+  /* Card Hover Effects */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:scale-[1.02] hover:border-primary/20;
+  }
+  
+  /* Medical Form Styles */
+  .form-section {
+    @apply space-y-4 rounded-lg border p-6 bg-card;
+  }
+  
+  .form-section-title {
+    @apply text-lg font-semibold mb-4 text-primary;
+  }
+  
+  /* Patient Card Styles */
+  .patient-card {
+    @apply rounded-lg border bg-card p-4 shadow-sm transition-colors hover:bg-muted/50;
+  }
+  
+  /* Priority Indicators */
+  .priority-high {
+    @apply border-l-4 border-l-destructive;
+  }
+  
+  .priority-medium {
+    @apply border-l-4 border-l-warning;
+  }
+  
+  .priority-low {
+    @apply border-l-4 border-l-muted-foreground;
+  }
+}
+
+@layer utilities {
+  /* Animation Utilities */
+  .animate-in {
+    animation: animate-in 0.2s ease-out;
+  }
+  
+  @keyframes animate-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Gradient Backgrounds */
+  .bg-gradient-medical {
+    @apply bg-gradient-to-br from-primary/10 via-background to-accent/10;
+  }
+  
+  .bg-gradient-card {
+    @apply bg-gradient-to-br from-card via-background to-muted/30;
+  }
+  
+  /* Text Gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+  
+  /* Scrollbar Styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted-foreground));
+    border-radius: 3px;
+  }
+  
+  /* Print Styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+    
+    .print-break {
+      page-break-after: always;
+    }
+  }
+
+  /* Daum Postcode Modal Styles */
+  /* Ensure the Daum postcode iframe displays properly */
+  [data-daum-postcode-container] iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+  }
+
+  /* Fix for Daum postcode content */
+  .daum_postcode_layer {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
