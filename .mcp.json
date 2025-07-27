@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-github"],
       "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_API_KEY}"
       }
     },
     "taskmaster-ai": {
@@ -31,6 +31,15 @@
       "command": "node",
       "args": ["node_modules/@vscode/prompt-tsx/dist/mcp-server.js"],
       "env": {}
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "${SUPABASE_SERVICE_ROLE_KEY}"
+      ]
     }
   }
 }

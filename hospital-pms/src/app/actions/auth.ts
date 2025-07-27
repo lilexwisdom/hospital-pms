@@ -329,8 +329,8 @@ export async function resetPasswordRequest(
 
     // 비밀번호 재설정 이메일 발송
     const redirectUrl = process.env.NEXT_PUBLIC_APP_URL 
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback`
-      : 'http://localhost:3000/api/auth/callback';
+      ? `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/callback?type=recovery`
+      : 'http://localhost:3000/api/auth/callback?type=recovery';
     
     console.log('Sending password reset email to:', validatedData.email);
     console.log('Redirect URL:', redirectUrl);
@@ -448,6 +448,10 @@ export async function updatePasswordWithToken(
       
       if (userError || !user) {
         console.error('No authenticated user for password reset:', userError);
+        // 토큰이 'authenticated'인 경우 더 자세한 메시지 제공
+        if (validatedData.token === 'authenticated') {
+          return actionError('인증이 필요합니다. 이메일의 재설정 링크를 통해 접속해주세요.', AuthErrorCode.SESSION_EXPIRED);
+        }
         return actionError('비밀번호 재설정 링크가 만료되었습니다. 다시 요청해주세요.', AuthErrorCode.SESSION_EXPIRED);
       }
       

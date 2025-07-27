@@ -84,13 +84,17 @@ export default function ResetPasswordConfirmPage() {
         }
       }
       
-      // If coming from email link with hash fragment
+      // If coming from email link through callback
       if (fromEmail && type === 'recovery') {
         // Check if user is already authenticated from the email link
         const { data: { user }, error } = await supabase.auth.getUser();
         
         if (error || !user) {
+          console.error('User not authenticated:', error);
           setVerificationError('비밀번호 재설정 링크가 만료되었습니다. 다시 요청해주세요.');
+        } else {
+          console.log('User authenticated:', user.email);
+          // User is authenticated, allow password reset
         }
         
         setIsVerifying(false);
@@ -130,7 +134,8 @@ export default function ResetPasswordConfirmPage() {
     }
 
     const formData = new FormData();
-    formData.set('token', code || ''); // Use code as token
+    // When coming from email, we don't need a token since the user is already authenticated
+    formData.set('token', code || 'authenticated'); // Pass 'authenticated' when no code
     formData.set('password', data.password);
     formData.set('type', 'recovery');
     
