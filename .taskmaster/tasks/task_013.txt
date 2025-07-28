@@ -1,0 +1,76 @@
+# Task ID: 13
+# Title: Admin 사용자 초대 시스템 구현
+# Status: pending
+# Dependencies: 3
+# Priority: high
+# Description: 관리자가 이메일로 새 사용자를 초대하고 역할을 지정할 수 있는 시스템
+# Details:
+- 이메일 기반 초대 링크 발송
+- 초대 토큰 생성 및 유효기간 관리 (72시간)
+- 역할 선택 (bd, cs, manager, admin)
+- 초대받은 사용자 계정 활성화 페이지
+- 초대 현황 관리 대시보드
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. 초대 토큰 시스템 구현 [pending]
+### Dependencies: None
+### Description: 72시간 유효한 초대 토큰 생성 및 검증 시스템 구현
+### Details:
+- invitations 테이블 생성 (token, email, role, expires_at, used_at)
+- 고유한 토큰 생성 로직
+- 토큰 만료 및 사용 여부 검증
+- 토큰 무효화 기능
+
+## 2. 사용자 초대 페이지 및 이메일 발송 구현 [pending]
+### Dependencies: 13.1
+### Description: 관리자가 사용자를 초대할 수 있는 UI와 이메일 발송 기능 구현
+### Details:
+- /admin/users/invite 페이지 구현
+- 이메일, 이름, 역할 선택 폼
+- Supabase Auth 이메일 템플릿 설정
+- 초대 링크 생성 및 이메일 발송
+- 초대 이력 관리
+
+## 3. 초대 수락 페이지 구현 [pending]
+### Dependencies: 13.2
+### Description: 초대받은 사용자가 계정을 활성화하는 페이지 구현
+### Details:
+- /auth/accept-invitation?token=xxx 페이지
+- 토큰 유효성 검증
+- 비밀번호 설정 폼
+- 프로필 정보 입력 (이름, 연락처 등)
+- 계정 생성 및 자동 로그인
+
+## 4. 초대 관리 대시보드 구현 [pending]
+### Dependencies: 13.2
+### Description: 관리자가 초대 현황을 관리할 수 있는 대시보드 구현
+### Details:
+- /admin/users/invitations 페이지
+- 초대 목록 (대기중/수락됨/만료됨)
+- 초대 재발송 기능
+- 초대 취소 기능
+- 필터링 및 검색
+
+## 5. 권한 검증 및 보안 강화 [pending]
+### Dependencies: 13.3
+### Description: 초대 시스템의 보안 검증 및 권한 체크 구현
+### Details:
+- Admin만 초대 가능하도록 권한 체크
+- 초대 토큰 브루트포스 방지
+- 이메일 중복 체크
+- 초대 로그 및 감사 추적
+- Rate limiting 적용
+
+## 6. 초대 시스템 통합 테스트 [pending]
+### Dependencies: 13.4, 13.5
+### Description: 전체 초대 플로우에 대한 통합 테스트 구현
+### Details:
+- 초대 발송 → 이메일 수신 → 계정 활성화 전체 플로우 테스트
+- 각 역할별 권한 테스트
+- 토큰 만료 및 재사용 방지 테스트
+- 에러 케이스 처리 테스트
+- UI/UX 검증
+

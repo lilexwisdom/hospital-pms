@@ -46,7 +46,7 @@
 5. 동시 편집 충돌 방지 테스트
 
 # Subtasks:
-## 1. 환자 목록 페이지 구현 (TanStack Table 기반) [pending]
+## 1. 환자 목록 페이지 구현 (TanStack Table 기반) [done]
 ### Dependencies: None
 ### Description: TanStack Table을 활용한 환자 목록 테이블 구현, 서버 사이드 페이지네이션, 다중 필터링(상태/담당자/기간), 빠른 검색 기능 구현
 ### Details:
@@ -57,7 +57,7 @@
 5. 정렬 기능 및 컬럼 가시성 토글 구현
 6. 로딩 상태 및 스켈레톤 UI 추가
 
-## 2. 환자 상세 페이지 탭 구조 구현 [pending]
+## 2. 환자 상세 페이지 탭 구조 구현 [done]
 ### Dependencies: 6.1
 ### Description: 환자 상세 정보를 위한 탭 기반 레이아웃 구현, 개요/의료정보/상담이력/예약정보 탭 컴포넌트 개발
 ### Details:
@@ -68,7 +68,7 @@
 5. AppointmentInfo 컴포넌트 (예약 캘린더 뷰)
 6. 탭 전환 시 데이터 프리페칭 구현
 
-## 3. 상태 관리 워크플로우 및 역할별 권한 구현 [pending]
+## 3. 상태 관리 워크플로우 및 역할별 권한 구현 [done]
 ### Dependencies: 6.2
 ### Description: 환자 상태 전환 비즈니스 로직 구현, 역할별 액션 권한 제어, 상태 변경 이력 추적
 ### Details:

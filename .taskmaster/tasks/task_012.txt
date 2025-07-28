@@ -1,0 +1,14 @@
+# Task ID: 12
+# Title: 초기 관리자 설정 시스템 구현
+# Status: pending
+# Dependencies: 5
+# Priority: high
+# Description: 데이터베이스 초기 관리자 설정 및 역할 변경 권한 시스템 개선
+# Details:
+1. prevent_role_change 트리거 함수 개선
+2. 초기 관리자가 없을 때 첫 번째 사용자를 관리자로 설정
+3. 역할 변경 권한 시스템을 더 유연하게 구현
+4. 개발 환경에서의 역할 변경 우회 로직 추가
+
+# Test Strategy:
+

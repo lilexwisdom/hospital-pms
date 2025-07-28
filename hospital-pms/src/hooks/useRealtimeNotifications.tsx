@@ -20,7 +20,6 @@ export function useRealtimeNotifications(userRole?: string) {
   const [channel, setChannel] = useState<RealtimeChannel | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const { toast } = useToast();
-  const supabase = createClient();
 
   const showNotification = useCallback((payload: NotificationPayload) => {
     const { type, data } = payload;
@@ -73,8 +72,14 @@ export function useRealtimeNotifications(userRole?: string) {
       return;
     }
 
+    // Prevent multiple subscriptions
+    if (channel) {
+      return;
+    }
+
     const setupRealtimeSubscription = async () => {
       try {
+        const supabase = createClient();
         // Get current user
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -162,10 +167,11 @@ export function useRealtimeNotifications(userRole?: string) {
     // Cleanup
     return () => {
       if (channel) {
+        const supabase = createClient();
         supabase.removeChannel(channel);
       }
     };
-  }, [userRole, supabase, showNotification]);
+  }, [userRole, showNotification, channel]);
 
   return {
     isConnected,
@@ -176,7 +182,6 @@ export function useRealtimeNotifications(userRole?: string) {
 // Hook for tracking survey progress
 export function useSurveyProgress(token: string) {
   const [progress, setProgress] = useState<any>(null);
-  const supabase = createClient();
 
   const saveProgress = useCallback(async (step: number, data: any) => {
     try {
@@ -191,6 +196,7 @@ export function useSurveyProgress(token: string) {
       localStorage.setItem(`survey_progress_${token}`, JSON.stringify(progressData));
 
       // Also save to database if needed
+      const supabase = createClient();
       const { error } = await supabase
         .from('survey_tokens')
         .update({
@@ -205,7 +211,7 @@ export function useSurveyProgress(token: string) {
     } catch (error) {
       console.error('Error saving survey progress:', error);
     }
-  }, [token, supabase]);
+  }, [token]);
 
   const loadProgress = useCallback(async () => {
     try {
@@ -217,6 +223,7 @@ export function useSurveyProgress(token: string) {
       }
 
       // Then try database
+      const supabase = createClient();
       const { data, error } = await supabase
         .from('survey_tokens')
         .select('survey_data')
@@ -229,7 +236,7 @@ export function useSurveyProgress(token: string) {
     } catch (error) {
       console.error('Error loading survey progress:', error);
     }
-  }, [token, supabase]);
+  }, [token]);
 
   const clearProgress = useCallback(() => {
     localStorage.removeItem(`survey_progress_${token}`);
