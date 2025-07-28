@@ -20,7 +20,7 @@ export interface Patient {
     phone?: string;
     relationship?: string;
   };
-  status: 'pending' | 'active' | 'inactive';
+  status: 'pending' | 'active' | 'inactive' | 'consulted' | 'treatment_in_progress' | 'treatment_completed' | 'follow_up' | 'discharged';
   patient_number: string | null;
   created_by: string | null;
   cs_manager: string | null;
@@ -58,7 +58,7 @@ export interface Patient {
 
 export interface PatientFilters {
   search?: string;
-  status?: 'pending' | 'active' | 'inactive' | 'all';
+  status?: 'pending' | 'active' | 'inactive' | 'consulted' | 'treatment_in_progress' | 'treatment_completed' | 'follow_up' | 'discharged' | 'all';
   assignedTo?: string;
   dateFrom?: Date;
   dateTo?: Date;

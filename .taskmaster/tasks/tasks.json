@@ -408,7 +408,7 @@
               2
             ],
             "details": "1. 상태 전환 규칙 정의 (State Machine 패턴)\n2. Zustand 스토어로 상태 관리 로직 구현\n3. 역할별 권한 체크 HOC/훅 구현\n4. 상태 변경 API 엔드포인트 구현\n5. 상태 변경 시 알림 및 담당자 자동 할당\n6. 상태 이력 테이블 및 UI 구현",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -729,7 +729,7 @@
     ],
     "metadata": {
       "created": "2025-07-17T12:11:52.460Z",
-      "updated": "2025-07-27T17:22:14.550Z",
+      "updated": "2025-07-28T13:39:22.180Z",
       "description": "Tasks for master context"
     }
   }

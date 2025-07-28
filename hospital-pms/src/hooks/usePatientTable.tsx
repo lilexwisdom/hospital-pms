@@ -14,6 +14,9 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/client';
 import { Patient, PatientFilters } from '@/types/patient.types';
+import { getStatusLabel, getStatusColor } from '@/lib/patient-status/config';
+import { Badge } from '@/components/ui/badge';
+import { PatientStatus } from '@/lib/patient-status/types';
 
 interface UsePatientTableProps {
   filters?: PatientFilters;
@@ -183,21 +186,12 @@ export const usePatientTable = ({ filters = {}, pageSize = 10 }: UsePatientTable
         accessorKey: 'status',
         header: '상태',
         cell: ({ row }) => {
-          const status = row.getValue('status') as string;
-          const statusColors = {
-            pending: 'bg-yellow-100 text-yellow-800',
-            active: 'bg-green-100 text-green-800',
-            inactive: 'bg-gray-100 text-gray-800',
-          };
-          const statusLabels = {
-            pending: '대기중',
-            active: '활성',
-            inactive: '비활성',
-          };
+          const status = row.getValue('status') as PatientStatus;
+          
           return (
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status as keyof typeof statusColors]}`}>
-              {statusLabels[status as keyof typeof statusLabels]}
-            </span>
+            <Badge variant={getStatusColor(status) as any}>
+              {getStatusLabel(status)}
+            </Badge>
           );
         },
       },

@@ -21,6 +21,7 @@ import { PatientOverview } from '@/components/patients/tabs/PatientOverview';
 import { MedicalInfo } from '@/components/patients/tabs/MedicalInfo';
 import { ConsultationHistory } from '@/components/patients/tabs/ConsultationHistory';
 import { AppointmentInfo } from '@/components/patients/tabs/AppointmentInfo';
+import { PatientStatusHistory } from '@/components/patients/PatientStatusHistory';
 
 function PatientDetailPage() {
   const params = useParams();
@@ -44,7 +45,24 @@ function PatientDetailPage() {
 
         const { data, error: fetchError } = await supabase
           .from('patients')
-          .select('*')
+          .select(`
+            *,
+            created_by_profile:profiles!patients_created_by_fkey (
+              id,
+              name,
+              role
+            ),
+            cs_manager_profile:profiles!patients_cs_manager_fkey (
+              id,
+              name,
+              role
+            ),
+            assigned_bd_profile:profiles!patients_assigned_bd_id_fkey (
+              id,
+              name,
+              role
+            )
+          `)
           .eq('id', patientId)
           .single();
 
@@ -65,6 +83,42 @@ function PatientDetailPage() {
       fetchPatient();
     }
   }, [patientId, supabase]);
+
+  // Refetch patient data function
+  const refetchPatient = async () => {
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('patients')
+        .select(`
+          *,
+          created_by_profile:profiles!patients_created_by_fkey (
+            id,
+            name,
+            role
+          ),
+          cs_manager_profile:profiles!patients_cs_manager_fkey (
+            id,
+            name,
+            role
+          ),
+          assigned_bd_profile:profiles!patients_assigned_bd_id_fkey (
+            id,
+            name,
+            role
+          )
+        `)
+        .eq('id', patientId)
+        .single();
+
+      if (fetchError) {
+        throw fetchError;
+      }
+
+      setPatient(data);
+    } catch (err) {
+      console.error('Error refetching patient:', err);
+    }
+  };
 
   const handleTabChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -139,16 +193,17 @@ function PatientDetailPage() {
 
       {/* Tabs */}
       <Tabs value={currentTab} onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-4 lg:w-[500px]">
+        <TabsList className="grid w-full grid-cols-5 lg:w-[600px]">
           <TabsTrigger value="overview">개요</TabsTrigger>
           <TabsTrigger value="medical">의료정보</TabsTrigger>
           <TabsTrigger value="consultations">상담이력</TabsTrigger>
           <TabsTrigger value="appointments">예약정보</TabsTrigger>
+          <TabsTrigger value="status-history">상태이력</TabsTrigger>
         </TabsList>
 
         <div className="mt-6">
           <TabsContent value="overview">
-            <PatientOverview patient={patient} />
+            <PatientOverview patient={patient} onStatusChange={refetchPatient} />
           </TabsContent>
           <TabsContent value="medical">
             <MedicalInfo patient={patient} />
@@ -158,6 +213,9 @@ function PatientDetailPage() {
           </TabsContent>
           <TabsContent value="appointments">
             <AppointmentInfo patientId={patient.id} />
+          </TabsContent>
+          <TabsContent value="status-history">
+            <PatientStatusHistory patientId={patient.id} />
           </TabsContent>
         </div>
       </Tabs>

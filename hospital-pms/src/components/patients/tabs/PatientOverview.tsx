@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Patient } from '@/types/patient.types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -12,40 +13,34 @@ import {
   MapPin,
   Activity,
   FileText,
-  AlertCircle
+  AlertCircle,
+  Edit2
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
+import { PatientStatus } from '@/lib/patient-status/types';
+import { getStatusLabel, getStatusColor } from '@/lib/patient-status/config';
+import { PatientStatusChange } from '@/components/patients/PatientStatusChange';
+import { usePatientPermissions } from '@/hooks/usePatientPermissions';
 
 interface PatientOverviewProps {
   patient: Patient;
+  onStatusChange?: () => void;
 }
 
-export function PatientOverview({ patient }: PatientOverviewProps) {
-  const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'default';
-      case 'pending':
-        return 'secondary';
-      case 'inactive':
-        return 'outline';
-      default:
-        return 'default';
-    }
-  };
+export function PatientOverview({ patient, onStatusChange }: PatientOverviewProps) {
+  const [statusChangeOpen, setStatusChangeOpen] = useState(false);
+  
+  const permissions = usePatientPermissions({
+    patientId: patient.id,
+    currentStatus: patient.status as PatientStatus,
+    createdBy: patient.created_by || undefined,
+    assignedTo: patient.assigned_bd_id || undefined,
+    csManager: patient.cs_manager || undefined
+  });
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'active':
-        return '활성';
-      case 'pending':
-        return '대기중';
-      case 'inactive':
-        return '비활성';
-      default:
-        return status;
-    }
+  const getStatusBadgeVariant = (status: string) => {
+    return getStatusColor(status as PatientStatus);
   };
 
   return (
@@ -101,16 +96,36 @@ export function PatientOverview({ patient }: PatientOverviewProps) {
               <div className="flex items-center gap-2 text-sm">
                 <FileText className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">상태:</span>
-                <Badge variant={getStatusBadgeVariant(patient.status)}>
-                  {getStatusLabel(patient.status)}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={getStatusBadgeVariant(patient.status) as any}>
+                    {getStatusLabel(patient.status as PatientStatus)}
+                  </Badge>
+                  {permissions.canChangeStatus && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => setStatusChangeOpen(true)}
+                    >
+                      <Edit2 className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
               </div>
               
               <div className="flex items-center gap-2 text-sm">
                 <User className="h-4 w-4 text-muted-foreground" />
-                <span className="text-muted-foreground">담당자:</span>
+                <span className="text-muted-foreground">BD 담당자:</span>
                 <span className="font-medium">
                   {patient.assigned_bd_profile?.name || '미할당'}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2 text-sm">
+                <User className="h-4 w-4 text-muted-foreground" />
+                <span className="text-muted-foreground">CS 담당자:</span>
+                <span className="font-medium">
+                  {patient.cs_manager_profile?.name || '미할당'}
                 </span>
               </div>
               
@@ -191,6 +206,22 @@ export function PatientOverview({ patient }: PatientOverviewProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Status Change Dialog */}
+      <PatientStatusChange
+        open={statusChangeOpen}
+        onOpenChange={setStatusChangeOpen}
+        patientId={patient.id}
+        currentStatus={patient.status as PatientStatus}
+        patientName={patient.name}
+        createdBy={patient.created_by || undefined}
+        assignedTo={patient.assigned_bd_id || undefined}
+        csManager={patient.cs_manager || undefined}
+        onSuccess={() => {
+          setStatusChangeOpen(false);
+          onStatusChange?.();
+        }}
+      />
     </div>
   );
 }

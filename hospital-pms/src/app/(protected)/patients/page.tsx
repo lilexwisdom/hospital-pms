@@ -89,6 +89,7 @@ function PatientsPage() {
         totalCount={totalCount}
         currentPage={currentPage}
         totalPages={totalPages}
+        onStatusChange={refetch}
       />
     </div>
   );

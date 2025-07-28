@@ -27,6 +27,7 @@ interface PatientTableProps {
   totalCount: number;
   currentPage: number;
   totalPages: number;
+  onStatusChange?: () => void;
 }
 
 export const PatientTable = ({
@@ -35,6 +36,7 @@ export const PatientTable = ({
   totalCount,
   currentPage,
   totalPages,
+  onStatusChange,
 }: PatientTableProps) => {
   return (
     <div className="space-y-4">
