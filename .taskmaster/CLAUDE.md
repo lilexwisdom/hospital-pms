@@ -1,4 +1,4 @@
-# Task Master AI - Claude Code Integration Guide
+# Task Master AI - Agent Integration Guide
 
 ## Essential Commands
 
@@ -415,11 +415,3 @@ These commands make AI calls and may take up to a minute:
 ---
 
 _This guide ensures Claude Code has immediate access to Task Master's essential functionality for agentic development workflows._
-
-### My Rules
-
-use context7 mcp if needed.
-
-## Task Master AI Instructions
-**Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
-@./.taskmaster/CLAUDE.md

@@ -37,6 +37,7 @@ export interface Database {
           flag_allergy: boolean
           flag_cardiovascular: boolean
           flag_pregnancy: boolean
+          version: number
         }
         Insert: {
           id?: string
@@ -65,6 +66,7 @@ export interface Database {
           flag_allergy?: boolean
           flag_cardiovascular?: boolean
           flag_pregnancy?: boolean
+          version?: number
         }
         Update: {
           id?: string
@@ -93,6 +95,7 @@ export interface Database {
           flag_allergy?: boolean
           flag_cardiovascular?: boolean
           flag_pregnancy?: boolean
+          version?: number
         }
         Relationships: [
           {
@@ -128,6 +131,7 @@ export interface Database {
           is_active: boolean
           created_at: string
           updated_at: string
+          version: number
         }
         Insert: {
           id: string
@@ -138,6 +142,7 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Update: {
           id?: string
@@ -148,6 +153,7 @@ export interface Database {
           is_active?: boolean
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Relationships: []
       }
@@ -161,6 +167,7 @@ export interface Database {
           created_at: string
           updated_at: string
           survey_token?: string
+          version: number
         }
         Insert: {
           id?: string
@@ -171,6 +178,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           survey_token?: string
+          version?: number
         }
         Update: {
           id?: string
@@ -181,6 +189,7 @@ export interface Database {
           created_at?: string
           updated_at?: string
           survey_token?: string
+          version?: number
         }
         Relationships: [
           {
@@ -264,6 +273,7 @@ export interface Database {
           reminder_sent: boolean
           created_at: string
           updated_at: string
+          version: number
         }
         Insert: {
           id?: string
@@ -279,6 +289,7 @@ export interface Database {
           reminder_sent?: boolean
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Update: {
           id?: string
@@ -294,6 +305,7 @@ export interface Database {
           reminder_sent?: boolean
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Relationships: [
           {
@@ -377,6 +389,7 @@ export interface Database {
           created_by: string | null
           created_at: string
           updated_at: string
+          version: number
         }
         Insert: {
           id?: string
@@ -390,6 +403,7 @@ export interface Database {
           created_by?: string | null
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Update: {
           id?: string
@@ -403,6 +417,7 @@ export interface Database {
           created_by?: string | null
           created_at?: string
           updated_at?: string
+          version?: number
         }
         Relationships: [
           {
@@ -424,35 +439,56 @@ export interface Database {
       audit_logs: {
         Row: {
           id: string
-          user_id: string | null
-          action: string
-          resource_type: string
-          resource_id: string | null
-          changes: Json | null
+          user_id: string
+          user_email: string | null
+          user_role: string | null
+          action: 'INSERT' | 'UPDATE' | 'DELETE'
+          table_name: string
+          record_id: string
+          old_values: Json | null
+          new_values: Json | null
+          changed_fields: string[] | null
+          version_before: number | null
+          version_after: number | null
           ip_address: string | null
           user_agent: string | null
+          metadata: Json
           created_at: string
         }
         Insert: {
           id?: string
-          user_id?: string | null
-          action: string
-          resource_type: string
-          resource_id?: string | null
-          changes?: Json | null
+          user_id: string
+          user_email?: string | null
+          user_role?: string | null
+          action: 'INSERT' | 'UPDATE' | 'DELETE'
+          table_name: string
+          record_id: string
+          old_values?: Json | null
+          new_values?: Json | null
+          changed_fields?: string[] | null
+          version_before?: number | null
+          version_after?: number | null
           ip_address?: string | null
           user_agent?: string | null
+          metadata?: Json
           created_at?: string
         }
         Update: {
           id?: string
-          user_id?: string | null
-          action?: string
-          resource_type?: string
-          resource_id?: string | null
-          changes?: Json | null
+          user_id?: string
+          user_email?: string | null
+          user_role?: string | null
+          action?: 'INSERT' | 'UPDATE' | 'DELETE'
+          table_name?: string
+          record_id?: string
+          old_values?: Json | null
+          new_values?: Json | null
+          changed_fields?: string[] | null
+          version_before?: number | null
+          version_after?: number | null
           ip_address?: string | null
           user_agent?: string | null
+          metadata?: Json
           created_at?: string
         }
         Relationships: [
@@ -460,7 +496,7 @@ export interface Database {
             foreignKeyName: "audit_logs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "profiles"
+            referencedRelation: "auth.users"
             referencedColumns: ["id"]
           }
         ]
@@ -508,7 +544,32 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      audit_activity_summary: {
+        Row: {
+          id: string
+          user_email: string | null
+          user_role: string | null
+          action: 'INSERT' | 'UPDATE' | 'DELETE'
+          table_name: string
+          record_id: string
+          changed_fields: string[] | null
+          version_before: number | null
+          version_after: number | null
+          created_at: string
+          record_name: string | null
+        }
+      }
+      audit_statistics: {
+        Row: {
+          audit_date: string
+          table_name: string
+          action: 'INSERT' | 'UPDATE' | 'DELETE'
+          user_role: string | null
+          operation_count: number
+          unique_users: number
+          unique_records: number
+        }
+      }
     }
     Functions: {
       use_survey_token: {
@@ -522,6 +583,25 @@ export interface Database {
       has_role: {
         Args: { user_id: string; role: string }
         Returns: boolean
+      }
+      get_audit_history: {
+        Args: { p_table_name: string; p_record_id: string; p_limit?: number }
+        Returns: Array<{
+          id: string
+          user_email: string | null
+          user_role: string | null
+          action: 'INSERT' | 'UPDATE' | 'DELETE'
+          changed_fields: string[] | null
+          old_values: Json | null
+          new_values: Json | null
+          version_before: number | null
+          version_after: number | null
+          created_at: string
+        }>
+      }
+      restore_record_version: {
+        Args: { p_table_name: string; p_record_id: string; p_target_version: number }
+        Returns: Json
       }
     }
     Enums: {
