@@ -11,6 +11,10 @@ node_modules/
 
 # Environment variables
 .env
+.env.*
+
+# MCP configuration (contains sensitive keys)
+.mcp.json
 
 # Editor directories and files
 .idea

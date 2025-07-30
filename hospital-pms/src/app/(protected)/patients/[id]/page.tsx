@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { withProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { PageLoadingSkeleton } from '@/components/auth/AuthLoading';
-import { getClient } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import { Patient } from '@/types/patient.types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Edit, MoreVertical } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +35,7 @@ function PatientDetailPage() {
   const patientId = params.id as string;
   const currentTab = searchParams.get('tab') || 'overview';
   
-  const supabase = getClient();
+  const supabase = createClient();
 
   // Fetch patient data
   useEffect(() => {
@@ -134,6 +135,34 @@ function PatientDetailPage() {
     router.push('/patients');
   };
 
+  const handleDelete = async () => {
+    if (!confirm('정말로 이 환자를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+      return;
+    }
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('patients')
+        .delete()
+        .eq('id', patientId)
+        .eq('version', patient.version); // Optimistic locking
+
+      if (error) {
+        if (error.message.includes('version')) {
+          throw new Error('다른 사용자가 이미 수정했습니다. 페이지를 새로고침해주세요.');
+        }
+        throw error;
+      }
+
+      toast.success('환자가 성공적으로 삭제되었습니다.');
+      router.push('/patients');
+    } catch (err: any) {
+      console.error('Error deleting patient:', err);
+      toast.error(err.message || '환자 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   if (loading) {
     return <PageLoadingSkeleton />;
   }
@@ -185,7 +214,7 @@ function PatientDetailPage() {
               <DropdownMenuItem>상태 변경</DropdownMenuItem>
               <DropdownMenuItem>담당자 변경</DropdownMenuItem>
               <DropdownMenuItem>인쇄</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-600">삭제</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-600" onClick={handleDelete}>삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
