@@ -1,10 +1,25 @@
 {
-  "allowedTools": [
-    "Edit",
-    "Bash(task-master *)",
-    "Bash(git commit:*)",
-    "Bash(git add:*)",
-    "Bash(npm run *)",
-    "mcp__taskmaster-ai__*"
-  ]
+  "permissions": {
+    "allow": [
+      "Edit",
+      "Read",
+      "Write",
+      "MultiEdit",
+      "Glob",
+      "Grep",
+      "LS",
+      "WebSearch",
+      "WebFetch",
+      "Bash(task-master *)",
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(node *)",
+      "Bash(npx *)",
+      "mcp__taskmaster_ai__*",
+      "mcp__context7__*",
+      "mcp__github__*",
+      "mcp__supabase__*",
+      "mcp__ide__*"
+    ]
+  }
 }
